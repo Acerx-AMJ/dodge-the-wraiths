@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dqy8noymwih0l"]
+
+[ext_resource type="Script" uid="uid://djh23mll5176g" path="res://scripts/mob_homing.gd" id="1_ocyic"]
+[ext_resource type="Texture2D" uid="uid://nrelcmwl3e0d" path="res://art/eye1.png" id="2_pbgio"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ocyic"]
+atlas = ExtResource("2_pbgio")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ohcqi"]
+atlas = ExtResource("2_pbgio")
+region = Rect2(65, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ocyic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ohcqi")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pkegy"]
+radius = 20.0
+
+[node name="MobHoming" type="CharacterBody2D" unique_id=583409409 groups=["mobs"]]
+collision_mask = 0
+script = ExtResource("1_ocyic")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"idle"
+frame_progress = 0.5519362
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(10, 0)
+rotation = 1.5707964
+shape = SubResource("CircleShape2D_pkegy")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-10, -20, 40, 40)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

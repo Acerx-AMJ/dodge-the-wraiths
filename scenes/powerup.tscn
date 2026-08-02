@@ -1,0 +1,55 @@
+[gd_scene format=3 uid="uid://cu7i2cda0pbst"]
+
+[ext_resource type="Script" uid="uid://bfooumwi35bji" path="res://scripts/powerup.gd" id="1_wh0le"]
+[ext_resource type="Texture2D" uid="uid://qi17evkuidwo" path="res://art/powerup_slow.png" id="2_6cuax"]
+[ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://art/powerup_shield.png" id="3_6cuax"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kyu3p"]
+radius = 39.0
+
+[sub_resource type="Curve" id="Curve_to7bl"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.9931035, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_6cuax"]
+curve = SubResource("Curve_to7bl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kyu3p"]
+lifetime_randomness = 0.3
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 115.0
+angle_min = 1.0728835e-05
+angle_max = 1.0728835e-05
+direction = Vector3(0, 1, 0)
+initial_velocity_min = -200.0
+initial_velocity_max = 200.0
+angular_velocity_min = -1.6093254e-05
+angular_velocity_max = -1.6093254e-05
+gravity = Vector3(0, 98, 0)
+scale_min = 0.099999994
+scale_max = 0.19999999
+alpha_curve = SubResource("CurveTexture_6cuax")
+
+[node name="Powerup" type="Area2D" unique_id=462956486 groups=["powerups"]]
+collision_layer = 2
+script = ExtResource("1_wh0le")
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1208924081]
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("2_6cuax")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=762928201]
+shape = SubResource("CircleShape2D_kyu3p")
+
+[node name="Particles" type="GPUParticles2D" parent="." unique_id=1785867654]
+scale = Vector2(0.33, 0.33)
+emitting = false
+amount = 12
+texture = ExtResource("3_6cuax")
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_kyu3p")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
