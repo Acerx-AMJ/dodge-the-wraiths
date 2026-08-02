@@ -1,41 +1,12 @@
 [gd_scene format=3 uid="uid://cqt4t1hvcvmri"]
 
-[ext_resource type="Texture2D" uid="uid://cfyadtefj08hh" path="res://art/playerGrey_up1.png" id="1_hqtel"]
 [ext_resource type="Script" uid="uid://cud646txlx1kx" path="res://scripts/player.gd" id="1_sweqy"]
 [ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://art/powerup_shield.png" id="2_2hs0m"]
-[ext_resource type="Texture2D" uid="uid://cljhs8lhuqbeu" path="res://art/playerGrey_up2.png" id="2_sweqy"]
 [ext_resource type="Texture2D" uid="uid://dafo7rgqm434a" path="res://art/powerup_attack.png" id="3_1jxqw"]
-[ext_resource type="Texture2D" uid="uid://ypfyufu3pwt7" path="res://art/playerGrey_walk1.png" id="3_2hs0m"]
-[ext_resource type="Texture2D" uid="uid://c3a3n7gjwpdcn" path="res://art/playerGrey_walk2.png" id="4_1jxqw"]
+[ext_resource type="Texture2D" uid="uid://c3m0k2lsby1dd" path="res://art/icon1.png" id="4_dqkch"]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_hqtel")
-}, {
-"duration": 1.0,
-"texture": ExtResource("2_sweqy")
-}],
-"loop": 1,
-"name": &"up",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("3_2hs0m")
-}, {
-"duration": 1.0,
-"texture": ExtResource("4_1jxqw")
-}],
-"loop": 1,
-"name": &"walk",
-"speed": 5.0
-}]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x2yrg"]
-radius = 10.799999
-height = 27.199999
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kyu3p"]
+size = Vector2(19.199999, 19.199999)
 
 [node name="Player" type="Area2D" unique_id=1073304146]
 script = ExtResource("1_sweqy")
@@ -51,14 +22,16 @@ visible = false
 scale = Vector2(0.4, 0.4)
 texture = ExtResource("3_1jxqw")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1816016864]
-scale = Vector2(0.5, 0.5)
-sprite_frames = SubResource("SpriteFrames_kyu3p")
-animation = &"walk"
-frame_progress = 0.35861307
+[node name="Sprite" type="Sprite2D" parent="." unique_id=1000402729]
+z_index = 1
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("4_dqkch")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=21791538]
+position = Vector2(-7.1525574e-07, 7.1525574e-07)
 scale = Vector2(2.5, 2.5)
-shape = SubResource("CapsuleShape2D_x2yrg")
+shape = SubResource("RectangleShape2D_kyu3p")
+
+[node name="Shadows" type="Node" parent="." unique_id=667131329]
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
