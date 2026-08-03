@@ -5,6 +5,7 @@ signal start_game
 var music_volume = 1
 var sfx_volume = 1
 var high_score = 0
+var total_score = 0
 
 func _ready() -> void:
 	var file = FileAccess.open(savefile, FileAccess.READ)
@@ -12,6 +13,7 @@ func _ready() -> void:
 	music_volume = config["music_volume"] if config.has("music_volume") else 1
 	sfx_volume = config["sfx_volume"] if config.has("sfx_volume") else 1
 	high_score = config["high_score"] if config.has("high_score") else 0
+	total_score = config["total_score"] if config.has("total_score") else 0
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
@@ -32,6 +34,7 @@ func quit() -> void:
 		"music_volume": music_volume,
 		"sfx_volume": sfx_volume,
 		"high_score": high_score,
+		"total_score": total_score,
 	})
 	get_tree().quit()
 
@@ -39,12 +42,10 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
-func display_powerup_info(attack_timer: float, shield_timer: float, slow_timer: float) -> void:
+func display_powerup_info(attack_timer: float, slow_timer: float) -> void:
 	var text = ""
 	if attack_timer > 0:
 		text = str(text, "ATK ", round(attack_timer * 10.0) / 10.0, "\n")
-	if shield_timer > 0:
-		text = str(text, "SHD ", round(shield_timer * 10.0) / 10.0, "\n")
 	if slow_timer > 0:
 		text = str(text, "SLW ", round(slow_timer * 10.0) / 10.0, "\n")
 	$Powerups.text = text
@@ -60,7 +61,7 @@ func game_over():
 	await $MessageTimer.timeout
 
 	$ScoreLabel.text = str("HS: ", high_score)
-	$Message.text = "Dodge the Creeps!"
+	$Message.text = "Dodge the Wraiths!"
 	$Message.show()
 
 	await get_tree().create_timer(1.0).timeout
@@ -69,6 +70,7 @@ func game_over():
 func update_score(score: int):
 	$ScoreLabel.text = str(score)
 	high_score = max(high_score, score)
+	total_score += score
 
 func _on_message_timer_timeout() -> void:
 	$Message.hide()

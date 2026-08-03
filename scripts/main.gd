@@ -10,7 +10,6 @@ extends Node
 @export var score_per_second = 1
 @export var score_from_killing_enemy = 3
 
-var shield_timer = 0
 var attack_timer = 0
 var slow_timer = 0
 var score = 0
@@ -19,32 +18,36 @@ var is_playing = false
 var powerup_types = [{
 	"function": "powerup_slow",
 	"duration": 10.0,
-	"sprite": "res://art/powerup_slow.png"
+	"sprite": "res://art/powerup_slow.png",
+	"sound": "res://art/slow.wav"
 }, {
 	"function": "powerup_shield",
-	"duration": 7.5,
-	"sprite": "res://art/powerup_shield.png"
+	"duration": 0.0,
+	"sprite": "res://art/powerup_shield.png",
+	"sound": "res://art/shield.wav"
 }, {
 	"function": "powerup_score",
 	"duration": 0.0,
-	"sprite": "res://art/powerup_score.png"
+	"sprite": "res://art/powerup_score.png",
+	"sound": "res://art/score.wav"
 }, {
 	"function": "powerup_clear",
 	"duration": 0.0,
-	"sprite": "res://art/powerup_clear.png"
+	"sprite": "res://art/powerup_clear.png",
+	"sound": "res://art/clear.wav"
 }, {
 	"function": "powerup_attack",
 	"duration": 5.0,
-	"sprite": "res://art/powerup_attack.png"
+	"sprite": "res://art/powerup_attack.png",
+	"sound": "res://art/attack.wav"
 }]
 
 func powerup_slow(duration: float) -> void:
 	$MobTimer.wait_time = mob_spawn_speed * 4
 	slow_timer += duration
 
-func powerup_shield(duration: float) -> void:
+func powerup_shield(_duration: float) -> void:
 	$Player.powerup_shield()
-	shield_timer += duration
 
 func powerup_score(_duration: float) -> void:
 	score += 10
@@ -72,7 +75,6 @@ func new_game():
 	is_playing = true
 	score = 0
 	attack_timer = 0
-	shield_timer = 0
 	slow_timer = 0
 	$PowerupTimer.wait_time = powerup_spawn_speed
 	$MobTimer.wait_time = mob_spawn_speed
@@ -97,11 +99,12 @@ func update_timer(timer: float, delta: float, f: Callable) -> float:
 func _process(delta: float) -> void:
 	if not is_playing: return
 	attack_timer = update_timer(attack_timer, delta, $Player.powerup_attack_stop)
-	shield_timer = update_timer(shield_timer, delta, $Player.powerup_shield_stop)
 	slow_timer   = update_timer(slow_timer,   delta, func(): $MobTimer.wait_time = mob_spawn_speed)
-	$HUD.display_powerup_info(attack_timer, shield_timer, slow_timer)
+	$HUD.display_powerup_info(attack_timer, slow_timer)
 
 func _on_player_enemy_killed() -> void:
+	var sounds = $KillSounds.get_children()
+	sounds[randi() % sounds.size()].play()
 	score += score_from_killing_enemy
 	$HUD.update_score(score)
 
@@ -131,6 +134,7 @@ func _on_powerup_timer_timeout() -> void:
 	powerup.duration = powerup_type["duration"]
 	powerup.get_node("Sprite2D").texture = texture
 	powerup.get_node("Particles").texture = texture
+	powerup.get_node("Sound").stream = load(powerup_type["sound"])
 	add_child(powerup)
 	$PowerupTimer.wait_time = powerup_spawn_speed * randf_range(0.6, 1.4)
 

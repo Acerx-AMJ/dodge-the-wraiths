@@ -70,11 +70,16 @@ func _on_body_entered(body: Node2D) -> void:
 	if attack_mode:
 		body.queue_free()
 		enemy_killed.emit()
+		return
 
-	if not shielded and not attack_mode:
-		for i in range(shadow_count):
-			shadows[i].hide()
+	if shielded:
+		body.queue_free()
+		enemy_killed.emit()
+		powerup_shield_stop()
+		return
 
-		hide()
-		hit.emit()
-		$CollisionShape2D.set_deferred("disabled", true)
+	for i in range(shadow_count):
+		shadows[i].hide()
+	hide()
+	hit.emit()
+	$CollisionShape2D.set_deferred("disabled", true)

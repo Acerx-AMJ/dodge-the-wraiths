@@ -9,10 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://bv844oacexsoi" path="res://scenes/mob_fish.tscn" id="4_kek77"]
 [ext_resource type="PackedScene" uid="uid://c8imul6yqqag2" path="res://scenes/mob_wavy.tscn" id="5_choun"]
 [ext_resource type="AudioStream" uid="uid://dyd118mvy7alh" path="res://art/death.wav" id="9_85g3d"]
-[ext_resource type="AudioStream" uid="uid://14olx1y602tt" path="res://art/kill.wav" id="10_trceg"]
-[ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://art/kill2.wav" id="11_a8y0u"]
-[ext_resource type="AudioStream" uid="uid://cffd57k1jms2b" path="res://art/kill3.wav" id="12_jkv2x"]
-[ext_resource type="AudioStream" uid="uid://grpaqeqdktu7" path="res://art/kill4.wav" id="13_jbj1t"]
 
 [sub_resource type="Curve2D" id="Curve2D_lquwl"]
 _data = {
@@ -41,7 +37,7 @@ loop = true
 script = ExtResource("1_h2yge")
 mob_scenes = Array[PackedScene]([ExtResource("2_5vw27"), ExtResource("3_kek77"), ExtResource("4_kek77"), ExtResource("5_choun")])
 powerup_scene = ExtResource("3_7mycd")
-powerup_spawn_speed = 10.0
+powerup_spawn_speed = 2.0
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=642008054]
 anchors_preset = 15
@@ -49,7 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.36313483, 0.1456523, 0.20403045, 1)
+color = Color(0.40480408, 0.35589093, 0.45293027, 1)
 
 [node name="Player" parent="." unique_id=1073304146 instance=ExtResource("1_ig7tw")]
 visible = false
@@ -83,20 +79,6 @@ bus = &"Music"
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="." unique_id=237897867]
 stream = ExtResource("9_85g3d")
 bus = &"SFX"
-
-[node name="KillSounds" type="Node" parent="." unique_id=552287460]
-
-[node name="Kill1" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=524167868]
-stream = ExtResource("10_trceg")
-
-[node name="Kill2" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=674187123]
-stream = ExtResource("11_a8y0u")
-
-[node name="Kill3" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=827888726]
-stream = ExtResource("12_jkv2x")
-
-[node name="Kill4" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=1737288976]
-stream = ExtResource("13_jbj1t")
 
 [connection signal="enemy_killed" from="Player" to="." method="_on_player_enemy_killed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
