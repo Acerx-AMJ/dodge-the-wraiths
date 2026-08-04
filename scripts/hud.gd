@@ -3,6 +3,7 @@ signal start_game
 
 @export var savefile = "user://save_game.dat"
 @export var camera_shake_enabled = true
+@export var particles_enabled = true
 
 var music_volume = 1
 var sfx_volume = 1
@@ -18,6 +19,7 @@ func _ready() -> void:
 		high_score = config["high_score"] if config.has("high_score") else 0
 		total_score = config["total_score"] if config.has("total_score") else 0
 		camera_shake_enabled = config["camera_shake_enabled"] if config.has("camera_shake_enabled") else true
+		particles_enabled = config["particles_enabled"] if config.has("particles_enabled") else true
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
@@ -30,6 +32,8 @@ func _ready() -> void:
 	$Options/SoundSlider/Label.text = str("SFX: ", round(100 * sfx_volume), "%")
 
 	$Options/CameraShake.button_pressed = camera_shake_enabled
+	$Options/Particles.button_pressed = particles_enabled
+
 	$ScoreLabel.text = str("HS: ", high_score)
 	get_tree().set_auto_accept_quit(false)
 
@@ -41,6 +45,7 @@ func quit() -> void:
 		"high_score": high_score,
 		"total_score": total_score,
 		"camera_shake_enabled": camera_shake_enabled,
+		"particles_enabled": particles_enabled,
 	})
 	get_tree().quit()
 
@@ -116,3 +121,6 @@ func _on_sound_slider_value_changed(value: float) -> void:
 
 func _on_camera_shake_toggled(toggled_on: bool) -> void:
 	camera_shake_enabled = toggled_on
+
+func _on_particles_toggled(toggled_on: bool) -> void:
+	particles_enabled = toggled_on

@@ -57,7 +57,12 @@ func powerup_clear(_duration: float) -> void:
 	score += get_tree().get_node_count_in_group("mobs") * score_from_killing_enemy
 	$HUD.update_score(score)
 	$Camera2D.shake(15.0, 5.0)
-	get_tree().call_group("mobs", "queue_free")
+
+	for enemy in get_tree().get_nodes_in_group("mobs"):
+		var sprite = enemy.get_node("AnimatedSprite2D")
+		var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+		spawn_death_particles(texture, enemy.position)
+		enemy.queue_free()
 
 func powerup_attack(duration: float) -> void:
 	$Player.powerup_attack()
@@ -103,15 +108,32 @@ func _process(delta: float) -> void:
 	slow_timer   = update_timer(slow_timer,   delta, func(): $MobTimer.wait_time = mob_spawn_speed)
 	$HUD.display_powerup_info(attack_timer, slow_timer)
 
-func _on_player_enemy_killed() -> void:
+func spawn_death_particles(texture: Texture, position: Vector2) -> void:
+	if not $HUD.particles_enabled: return
+	var particles: GPUParticles2D = $DeathParticles.duplicate()
+	particles.texture = texture
+	particles.position = position
+	add_child(particles)
+
+	particles.emitting = true
+	await particles.finished
+	particles.queue_free()
+
+func _on_player_enemy_killed(enemy: Node2D) -> void:
 	var sounds = $KillSounds.get_children()
 	sounds[randi() % sounds.size()].play()
 	score += score_from_killing_enemy
 	$HUD.update_score(score)
 	$Camera2D.shake(10.0, 7.5)
+	
+	var sprite = enemy.get_node("AnimatedSprite2D")
+	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+	spawn_death_particles(texture, enemy.position)
+
 
 func _on_player_hit() -> void:
 	$Camera2D.shake(15.0, 5.0)
+	spawn_death_particles($Player/Sprite.texture, $Player.position)
 	game_over()
 
 func _on_mob_timer_timeout() -> void:

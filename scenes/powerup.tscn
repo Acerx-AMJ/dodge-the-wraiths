@@ -12,7 +12,7 @@ radius = 39.0
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.9931035, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_6cuax"]
+[sub_resource type="CurveTexture" id="CurveTexture_pufsy"]
 curve = SubResource("Curve_to7bl")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kyu3p"]
@@ -30,7 +30,7 @@ angular_velocity_max = -1.6093254e-05
 gravity = Vector3(0, 98, 0)
 scale_min = 0.099999994
 scale_max = 0.19999999
-alpha_curve = SubResource("CurveTexture_6cuax")
+alpha_curve = SubResource("CurveTexture_pufsy")
 
 [node name="Powerup" type="Area2D" unique_id=462956486 groups=["powerups"]]
 collision_layer = 2
