@@ -13,6 +13,7 @@
 [ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://art/kill2.wav" id="11_a8y0u"]
 [ext_resource type="AudioStream" uid="uid://cffd57k1jms2b" path="res://art/kill3.wav" id="12_jkv2x"]
 [ext_resource type="AudioStream" uid="uid://grpaqeqdktu7" path="res://art/kill4.wav" id="13_jbj1t"]
+[ext_resource type="Script" uid="uid://ck8mfnsxrkt5y" path="res://scripts/camera_2d.gd" id="14_a8y0u"]
 
 [sub_resource type="Curve2D" id="Curve2D_lquwl"]
 _data = {
@@ -44,11 +45,16 @@ powerup_scene = ExtResource("3_7mycd")
 powerup_spawn_speed = 10.0
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=642008054]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = -1
+anchor_left = -0.5
+anchor_top = -0.5
+anchor_right = 1.5000001
+anchor_bottom = 1.5000001
+offset_right = -480.00006
+offset_bottom = -720.0001
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(2, 2)
 color = Color(0.36313483, 0.1456523, 0.20403045, 1)
 
 [node name="Player" parent="." unique_id=1073304146 instance=ExtResource("1_ig7tw")]
@@ -97,6 +103,18 @@ stream = ExtResource("12_jkv2x")
 
 [node name="Kill4" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=1737288976]
 stream = ExtResource("13_jbj1t")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=398676798]
+offset = Vector2(240, 360)
+script = ExtResource("14_a8y0u")
+
+[node name="ViewportSize" type="Control" parent="." unique_id=1037861142]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [connection signal="enemy_killed" from="Player" to="." method="_on_player_enemy_killed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]

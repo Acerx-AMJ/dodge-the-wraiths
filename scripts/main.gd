@@ -56,6 +56,7 @@ func powerup_score(_duration: float) -> void:
 func powerup_clear(_duration: float) -> void:
 	score += get_tree().get_node_count_in_group("mobs") * score_from_killing_enemy
 	$HUD.update_score(score)
+	$Camera2D.shake(15.0, 5.0)
 	get_tree().call_group("mobs", "queue_free")
 
 func powerup_attack(duration: float) -> void:
@@ -107,8 +108,10 @@ func _on_player_enemy_killed() -> void:
 	sounds[randi() % sounds.size()].play()
 	score += score_from_killing_enemy
 	$HUD.update_score(score)
+	$Camera2D.shake(10.0, 7.5)
 
 func _on_player_hit() -> void:
+	$Camera2D.shake(15.0, 5.0)
 	game_over()
 
 func _on_mob_timer_timeout() -> void:
@@ -129,7 +132,7 @@ func _on_powerup_timer_timeout() -> void:
 	var powerup = powerup_scene.instantiate()
 	var texture = load(powerup_type["sprite"])
 
-	powerup.position = Vector2(randf_range(0.0, $ColorRect.size.x), randf_range(0.0, $ColorRect.size.y)) # Cheaty
+	powerup.position = Vector2(randf_range(0.0, $ViewportSize.size.x), randf_range(0.0, $ViewportSize.size.y)) # Cheaty
 	powerup.function = powerup_type["function"]
 	powerup.duration = powerup_type["duration"]
 	powerup.get_node("Sprite2D").texture = texture
