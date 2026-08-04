@@ -9,11 +9,12 @@ var total_score = 0
 
 func _ready() -> void:
 	var file = FileAccess.open(savefile, FileAccess.READ)
-	var config = file.get_var()
-	music_volume = config["music_volume"] if config.has("music_volume") else 1
-	sfx_volume = config["sfx_volume"] if config.has("sfx_volume") else 1
-	high_score = config["high_score"] if config.has("high_score") else 0
-	total_score = config["total_score"] if config.has("total_score") else 0
+	if file:
+		var config = file.get_var()
+		music_volume = config["music_volume"] if config.has("music_volume") else 1
+		sfx_volume = config["sfx_volume"] if config.has("sfx_volume") else 1
+		high_score = config["high_score"] if config.has("high_score") else 0
+		total_score = config["total_score"] if config.has("total_score") else 0
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
