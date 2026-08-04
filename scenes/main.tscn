@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dwr0vx3lc1sxo" path="res://scenes/hud.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bv844oacexsoi" path="res://scenes/mob_fish.tscn" id="4_kek77"]
 [ext_resource type="PackedScene" uid="uid://c8imul6yqqag2" path="res://scenes/mob_wavy.tscn" id="5_choun"]
+[ext_resource type="PackedScene" uid="uid://51k3pvvdr55y" path="res://scenes/mob_slime.tscn" id="6_dp3eg"]
 [ext_resource type="AudioStream" uid="uid://dyd118mvy7alh" path="res://art/death.wav" id="9_85g3d"]
 [ext_resource type="AudioStream" uid="uid://14olx1y602tt" path="res://art/kill.wav" id="10_trceg"]
 [ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://art/kill2.wav" id="11_a8y0u"]
@@ -84,7 +85,7 @@ loop = true
 
 [node name="Main" type="Node" unique_id=504091427]
 script = ExtResource("1_h2yge")
-mob_scenes = Array[PackedScene]([ExtResource("2_5vw27"), ExtResource("3_kek77"), ExtResource("4_kek77"), ExtResource("5_choun")])
+mob_scenes = Array[PackedScene]([ExtResource("2_5vw27"), ExtResource("3_kek77"), ExtResource("4_kek77"), ExtResource("5_choun"), ExtResource("6_dp3eg")])
 powerup_scene = ExtResource("3_7mycd")
 powerup_spawn_speed = 10.0
 
@@ -101,6 +102,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=642008054]
+z_index = -2
 anchors_preset = -1
 anchor_left = -0.5
 anchor_top = -0.5
