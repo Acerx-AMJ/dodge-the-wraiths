@@ -45,8 +45,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lq8xf"]
-radius = 24.0
-height = 62.0
+radius = 20.0
+height = 52.0
 
 [node name="MobFish" type="CharacterBody2D" unique_id=1233878181 groups=["mobs"]]
 collision_mask = 0
@@ -55,11 +55,10 @@ metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
 sprite_frames = SubResource("SpriteFrames_kyu3p")
-animation = &"idle"
-frame_progress = 0.55943793
+animation = &"idle_eye"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
-position = Vector2(0, 6)
+position = Vector2(6, 6)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_lq8xf")
 

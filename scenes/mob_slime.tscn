@@ -102,7 +102,7 @@ texture = ExtResource("2_aranj")
 scale = Vector2(0.75, 0.75)
 sprite_frames = SubResource("SpriteFrames_kyu3p")
 animation = &"slime4"
-frame_progress = 0.20310952
+frame_progress = 0.8695882
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
 position = Vector2(0, 8)

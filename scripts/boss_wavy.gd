@@ -1,6 +1,6 @@
 extends CharacterBody2D
-@export var velocity_min: float = 175.0
-@export var velocity_max: float = 300.0
+@export var velocity_min: float = 100.0
+@export var velocity_max: float = 200.0
 
 var initial_velocity: Vector2
 var initial_rotation: float

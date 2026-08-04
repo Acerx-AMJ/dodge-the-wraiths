@@ -1,9 +1,12 @@
 extends CharacterBody2D
-var initial_velocity
+@export var velocity_min: float = 150.0
+@export var velocity_max: float = 250.0
 
-func init(direction: float, vel: Vector2) -> void:
+var initial_velocity: Vector2
+
+func init(direction: float) -> void:
 	rotation = direction
-	initial_velocity = vel.rotated(direction)
+	initial_velocity = Vector2(randf_range(velocity_min, velocity_max), 0.0).rotated(direction)
 	velocity = Vector2(0, 0)
 	$AnimatedSprite2D.play(Array($AnimatedSprite2D.sprite_frames.get_animation_names()).pick_random())
 

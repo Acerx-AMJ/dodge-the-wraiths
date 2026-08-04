@@ -1,5 +1,9 @@
 extends CharacterBody2D
-var jump_height: float = -75.0
+@export var velocity_min: float = 150.0
+@export var velocity_max: float = 250.0
+@export var jump_height: float = -75.0
+@export var jump_length_min: float = 0.8
+@export var jump_length_max: float = 1.2
 
 var real_position: Vector2
 var velocity_rotation: float
@@ -12,17 +16,17 @@ var delay_timer: float = 0.0
 func jump() -> void:
 	jumping = true
 	jump_timer = 0.0
-	jump_length = randf_range(0.8, 1.2)
+	jump_length = randf_range(jump_length_min, jump_length_max)
 	delay_timer = 0.0
-	delay_length = randf_range(0.8, 1.2)
+	delay_length = randf_range(jump_length_min, jump_length_max)
 
 # Where t is [0; 1], basic symetric sine wave where 0 returns 0, 0.5 - 1 and 1 - 0
 func jump_formula(t: float) -> float:
 	return 1 - (cos(t * TAU) / 2 + 0.5)
 
-func init(direction: float, vel: Vector2) -> void:
+func init(direction: float) -> void:
 	velocity_rotation = direction
-	velocity = vel.rotated(direction)
+	velocity = Vector2(randf_range(velocity_min, velocity_max), 0.0).rotated(direction)
 	real_position = position
 	$AnimatedSprite2D.play(Array($AnimatedSprite2D.sprite_frames.get_animation_names()).pick_random())
 	jump()
@@ -35,7 +39,7 @@ func _process(delta: float) -> void:
 		real_position += velocity * delta
 		$Shadow.global_position = real_position
 		position = real_position
-		position.y += jump_formula(clamp(jump_timer / jump_length, 0.0, 1.0)) * jump_height
+		position.y += jump_formula(min(jump_timer / jump_length, 1.0)) * jump_height
 	else:
 		delay_timer += delta
 		if delay_timer >= delay_length:

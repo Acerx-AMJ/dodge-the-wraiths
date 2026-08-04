@@ -1,19 +1,27 @@
 extends Node
-
 @export var mob_scenes: Array[PackedScene]
+@export var boss_scenes: Array[PackedScene]
 @export var powerup_scene: PackedScene
-@export var min_speed = 150.0
-@export var max_speed = 250.0
-@export var mob_spawn_speed = 0.5
-@export var powerup_spawn_speed = 7.5
 
-@export var score_per_second = 1
-@export var score_from_killing_enemy = 3
+@export var mob_spawn_speed_initial: float = 0.5
+@export var boss_spawn_speed_initial: float = 15.0
+@export var powerup_spawn_speed_initial: float = 7.5
+@export var score_speed: float = 1.0
 
-var attack_timer = 0
-var slow_timer = 0
-var score = 0
-var is_playing = false
+var mob_spawn_speed: float = mob_spawn_speed_initial
+var boss_spawn_speed: float = boss_spawn_speed_initial
+var powerup_spawn_speed: float = powerup_spawn_speed_initial
+
+var mob_timer: float = mob_spawn_speed_initial
+var boss_timer: float = boss_spawn_speed_initial
+var powerup_timer: float = powerup_spawn_speed_initial
+var score_timer: float = score_speed
+var attack_timer: float = 0
+var slow_timer: float = 0
+
+var start_timers: bool = false
+var is_playing: bool = false
+var score: int = 0
 
 var powerup_types = [{
 	"function": "powerup_slow",
@@ -43,7 +51,8 @@ var powerup_types = [{
 }]
 
 func powerup_slow(duration: float) -> void:
-	$MobTimer.wait_time = mob_spawn_speed * 4
+	mob_spawn_speed = mob_spawn_speed_initial * 3
+	boss_spawn_speed = boss_spawn_speed_initial * 3
 	slow_timer += duration
 	$Vignette.apply(Color.WEB_GRAY, 0.5, slow_timer)
 
@@ -51,11 +60,11 @@ func powerup_shield(_duration: float) -> void:
 	$Player.powerup_shield()
 
 func powerup_score(_duration: float) -> void:
-	score += 10
+	score += 20
 	$HUD.update_score(score)
 
 func powerup_clear(_duration: float) -> void:
-	score += get_tree().get_node_count_in_group("mobs") * score_from_killing_enemy
+	score += get_tree().get_node_count_in_group("mobs") * 3
 	$HUD.update_score(score)
 	$Camera2D.shake(15.0, 5.0)
 	$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
@@ -71,10 +80,8 @@ func powerup_attack(duration: float) -> void:
 	attack_timer += duration
 
 func game_over():
+	start_timers = false
 	is_playing = false
-	$ScoreTimer.stop()
-	$PowerupTimer.stop()
-	$MobTimer.stop()
 	$HUD.game_over()
 	$Music.stop()
 	$DeathSound.play()
@@ -84,8 +91,10 @@ func new_game():
 	score = 0
 	attack_timer = 0
 	slow_timer = 0
-	$PowerupTimer.wait_time = powerup_spawn_speed
-	$MobTimer.wait_time = mob_spawn_speed
+	score_timer = score_speed
+	powerup_timer = powerup_spawn_speed_initial
+	mob_timer = mob_spawn_speed_initial
+	boss_timer = boss_spawn_speed_initial
 
 	get_tree().call_group("mobs", "queue_free")
 	get_tree().call_group("powerups", "queue_free")
@@ -95,20 +104,40 @@ func new_game():
 	$Music.play()
 
 	$HUD.update_score(score)
-	$HUD.show_message("Get Ready")
-
-func update_timer(timer: float, delta: float, f: Callable) -> float:
-	if timer > 0:
-		timer = max(0.0, timer - delta)
-		if timer == 0:
-			f.call()
-	return timer
+	$HUD.show_message("Get Ready...")
 
 func _process(delta: float) -> void:
 	if not is_playing: return
-	attack_timer = update_timer(attack_timer, delta, $Player.powerup_attack_stop)
-	slow_timer   = update_timer(slow_timer,   delta, func(): $MobTimer.wait_time = mob_spawn_speed)
+	if attack_timer > 0.0:
+		attack_timer = max(0.0, attack_timer - delta)
+		if attack_timer == 0.0:
+			$Player.powerup_attack_stop()
+	if slow_timer > 0.0:
+		slow_timer = max(0.0, slow_timer - delta)
+		if slow_timer == 0.0:
+			mob_spawn_speed = mob_spawn_speed_initial
+			boss_spawn_speed = boss_spawn_speed_initial
 	$HUD.display_powerup_info(attack_timer, slow_timer)
+
+	if not start_timers: return
+	mob_timer -= delta
+	boss_timer -= delta
+	powerup_timer -= delta
+	score_timer -= delta
+	
+	if mob_timer <= 0.0:
+		spawn_mob()
+		mob_timer += mob_spawn_speed * randf_range(0.8, 1.2)
+	if boss_timer <= 0.0:
+		spawn_boss()
+		boss_timer += boss_spawn_speed * randf_range(0.8, 1.2)
+	if powerup_timer <= 0.0:
+		spawn_powerup()
+		powerup_timer += powerup_spawn_speed * randf_range(0.8, 1.2)
+	if score_timer <= 0.0:
+		score += 1
+		$HUD.update_score(score)
+		score_timer += score_speed
 
 func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	if not $HUD.particles_enabled: return
@@ -121,39 +150,25 @@ func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	await particles.finished
 	particles.queue_free()
 
-func _on_player_enemy_killed(enemy: Node2D) -> void:
-	var sounds = $KillSounds.get_children()
-	sounds[randi() % sounds.size()].play()
-	score += score_from_killing_enemy
-	$HUD.update_score(score)
-	$Camera2D.shake(10.0, 7.5)
-	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
-	
-	var sprite = enemy.get_node("AnimatedSprite2D")
-	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
-	spawn_death_particles(texture, enemy.position)
-
-
-func _on_player_hit() -> void:
-	$Camera2D.shake(15.0, 5.0)
-	$Vignette.apply(Color.DARK_RED, 1.0, 3.0)
-	spawn_death_particles($Player/Sprite.texture, $Player.position)
-	game_over()
-
-func _on_mob_timer_timeout() -> void:
+func spawn_mob() -> void:
 	var mob = mob_scenes.pick_random().instantiate()
 	var mob_spawn_location = $MobPath/MobSpawnLocation
 	mob_spawn_location.progress_ratio = randf()
 	mob.position = mob_spawn_location.position
 
-	var velocity = Vector2(randf_range(min_speed, max_speed), 0.0)
-	var direction = mob_spawn_location.rotation + PI / 2 # face inwards
-	direction += randf_range(-PI / 4, PI / 4)
-
 	add_child(mob)
-	mob.init(direction, velocity)
+	mob.init(mob_spawn_location.rotation + randf_range(PI / 4, 3*PI / 4))
 
-func _on_powerup_timer_timeout() -> void:
+func spawn_boss() -> void:
+	var boss = boss_scenes.pick_random().instantiate()
+	var boss_spawn_location = $MobPath/MobSpawnLocation
+	boss_spawn_location.progress_ratio = randf()
+	boss.position = boss_spawn_location.position
+
+	add_child(boss)
+	boss.init(boss_spawn_location.rotation + randf_range(PI / 4, 3*PI / 4))
+
+func spawn_powerup() -> void:
 	var powerup_type = powerup_types.pick_random()
 	var powerup = powerup_scene.instantiate()
 	var texture = load(powerup_type["sprite"])
@@ -165,16 +180,27 @@ func _on_powerup_timer_timeout() -> void:
 	powerup.get_node("Particles").texture = texture
 	powerup.get_node("Sound").stream = load(powerup_type["sound"])
 	add_child(powerup)
-	$PowerupTimer.wait_time = powerup_spawn_speed * randf_range(0.6, 1.4)
 
-func _on_score_timer_timeout() -> void:
-	score += score_per_second
+func _on_player_enemy_killed(enemy: Node2D) -> void:
+	var sounds = $KillSounds.get_children()
+	sounds[randi() % sounds.size()].play()
+	score += 3
 	$HUD.update_score(score)
+	$Camera2D.shake(10.0, 7.5)
+	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
+	
+	var sprite = enemy.get_node("AnimatedSprite2D")
+	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+	spawn_death_particles(texture, enemy.position)
+
+func _on_player_hit() -> void:
+	$Camera2D.shake(15.0, 5.0)
+	$Vignette.apply(Color.DARK_RED, 1.0, 3.0)
+	spawn_death_particles($Player/Sprite.texture, $Player.position)
+	game_over()
 
 func _on_start_timer_timeout() -> void:
-	$PowerupTimer.start()
-	$MobTimer.start()
-	$ScoreTimer.start()
+	start_timers = true
 
 func _on_hud_start_game() -> void:
 	new_game()

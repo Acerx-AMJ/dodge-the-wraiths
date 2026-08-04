@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bv844oacexsoi" path="res://scenes/mob_fish.tscn" id="4_kek77"]
 [ext_resource type="PackedScene" uid="uid://c8imul6yqqag2" path="res://scenes/mob_wavy.tscn" id="5_choun"]
 [ext_resource type="PackedScene" uid="uid://51k3pvvdr55y" path="res://scenes/mob_slime.tscn" id="6_dp3eg"]
+[ext_resource type="PackedScene" uid="uid://b2cxtrivemr7r" path="res://scenes/boss_wavy.tscn" id="7_0ld40"]
 [ext_resource type="AudioStream" uid="uid://dyd118mvy7alh" path="res://art/death.wav" id="9_85g3d"]
 [ext_resource type="AudioStream" uid="uid://14olx1y602tt" path="res://art/kill.wav" id="10_trceg"]
 [ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://art/kill2.wav" id="11_a8y0u"]
@@ -86,8 +87,8 @@ loop = true
 [node name="Main" type="Node" unique_id=504091427]
 script = ExtResource("1_h2yge")
 mob_scenes = Array[PackedScene]([ExtResource("2_5vw27"), ExtResource("3_kek77"), ExtResource("4_kek77"), ExtResource("5_choun"), ExtResource("6_dp3eg")])
+boss_scenes = Array[PackedScene]([ExtResource("7_0ld40")])
 powerup_scene = ExtResource("3_7mycd")
-powerup_spawn_speed = 10.0
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=398676798]
 offset = Vector2(240, 360)
@@ -117,14 +118,6 @@ color = Color(0.36313483, 0.1456523, 0.20403045, 1)
 
 [node name="Player" parent="." unique_id=1073304146 instance=ExtResource("1_ig7tw")]
 visible = false
-
-[node name="MobTimer" type="Timer" parent="." unique_id=230901918]
-wait_time = 0.5
-
-[node name="PowerupTimer" type="Timer" parent="." unique_id=342865770]
-wait_time = 7.5
-
-[node name="ScoreTimer" type="Timer" parent="." unique_id=1914276695]
 
 [node name="StartTimer" type="Timer" parent="." unique_id=18364025]
 wait_time = 2.0
@@ -185,8 +178,5 @@ script = ExtResource("17_dp3eg")
 
 [connection signal="enemy_killed" from="Player" to="." method="_on_player_enemy_killed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
-[connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]
-[connection signal="timeout" from="PowerupTimer" to="." method="_on_powerup_timer_timeout"]
-[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]
 [connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
 [connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
