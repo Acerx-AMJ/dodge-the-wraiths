@@ -92,8 +92,8 @@ metadata/_edit_group_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
 sprite_frames = SubResource("SpriteFrames_kyu3p")
-animation = &"demon3"
-frame_progress = 0.71525997
+animation = &"demon4"
+frame_progress = 0.75040245
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
 position = Vector2(4, 0)

@@ -12,6 +12,7 @@ func init(direction: float) -> void:
 	velocity = vel.rotated(direction)
 	initial_velocity = vel
 	initial_rotation = direction
+	$AnimatedSprite2D.flip_v = (direction >= PI and direction <= 3 * PI / 2)
 	$AnimatedSprite2D.play(Array($AnimatedSprite2D.sprite_frames.get_animation_names()).pick_random())
 
 func _process(delta: float) -> void:

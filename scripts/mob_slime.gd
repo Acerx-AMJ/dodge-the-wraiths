@@ -20,10 +20,6 @@ func jump() -> void:
 	delay_timer = 0.0
 	delay_length = randf_range(jump_length_min, jump_length_max)
 
-# Where t is [0; 1], basic symetric sine wave where 0 returns 0, 0.5 - 1 and 1 - 0
-func jump_formula(t: float) -> float:
-	return 1 - (cos(t * TAU) / 2 + 0.5)
-
 func init(direction: float) -> void:
 	velocity_rotation = direction
 	velocity = Vector2(randf_range(velocity_min, velocity_max), 0.0).rotated(direction)
@@ -39,8 +35,14 @@ func _process(delta: float) -> void:
 		real_position += velocity * delta
 		$Shadow.global_position = real_position
 		position = real_position
-		position.y += jump_formula(min(jump_timer / jump_length, 1.0)) * jump_height
+
+		var t = min(jump_timer / jump_length, 1.0)
+		var y = 4.0 * t * (1.0 - t)
+		position.y += y * jump_height
+		scale.y = 1.0 + y * 0.5
+		scale.x = 1.0 + max(0.0, cos(t * TAU) / 2)
 	else:
+		scale.x = min(scale.x + delta * 3.0, 1.0) if scale.x < 1.0 else max(scale.x - delta * 3.0, 1.0)
 		delay_timer += delta
 		if delay_timer >= delay_length:
 			jump()

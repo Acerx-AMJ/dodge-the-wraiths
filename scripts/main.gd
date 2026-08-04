@@ -99,12 +99,14 @@ func new_game():
 	get_tree().call_group("mobs", "queue_free")
 	get_tree().call_group("powerups", "queue_free")
 
-	$Player.start($StartPosition.position)
-	$StartTimer.start()
+	$Player.start($ViewportSize.size / 2)
 	$Music.play()
 
 	$HUD.update_score(score)
 	$HUD.show_message("Get Ready...")
+
+	await get_tree().create_timer(2.0).timeout
+	start_timers = true
 
 func _process(delta: float) -> void:
 	if not is_playing: return
@@ -150,23 +152,28 @@ func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	await particles.finished
 	particles.queue_free()
 
+# [0] - location, [1] - rotation
+func get_spawn_location() -> Array:
+	var size = $ViewportSize.size
+	var side = randi() % 4
+	if side % 2: # right and left
+		return [Vector2(size.x if side == 1 else 0, randf_range(100.0, size.y - 200.0)), PI if side == 1 else TAU]
+	else: # top and bottom
+		return [Vector2(randf_range(100.0, size.x - 200.0), 0 if side == 0 else size.y), PI / 2 if side == 0 else 3 * PI / 2]
+
 func spawn_mob() -> void:
 	var mob = mob_scenes.pick_random().instantiate()
-	var mob_spawn_location = $MobPath/MobSpawnLocation
-	mob_spawn_location.progress_ratio = randf()
-	mob.position = mob_spawn_location.position
-
+	var spawn = get_spawn_location()
+	mob.position = spawn[0]
 	add_child(mob)
-	mob.init(mob_spawn_location.rotation + randf_range(PI / 4, 3*PI / 4))
+	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 
 func spawn_boss() -> void:
 	var boss = boss_scenes.pick_random().instantiate()
-	var boss_spawn_location = $MobPath/MobSpawnLocation
-	boss_spawn_location.progress_ratio = randf()
-	boss.position = boss_spawn_location.position
-
+	var spawn = get_spawn_location()
+	boss.position = spawn[0]
 	add_child(boss)
-	boss.init(boss_spawn_location.rotation + randf_range(PI / 4, 3*PI / 4))
+	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 
 func spawn_powerup() -> void:
 	var powerup_type = powerup_types.pick_random()
@@ -198,9 +205,6 @@ func _on_player_hit() -> void:
 	$Vignette.apply(Color.DARK_RED, 1.0, 3.0)
 	spawn_death_particles($Player/Sprite.texture, $Player.position)
 	game_over()
-
-func _on_start_timer_timeout() -> void:
-	start_timers = true
 
 func _on_hud_start_game() -> void:
 	new_game()

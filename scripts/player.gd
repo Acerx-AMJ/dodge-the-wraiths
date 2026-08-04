@@ -2,22 +2,26 @@ extends Area2D
 signal hit
 signal enemy_killed
 
-@export var speed = 300.0
-@export var acceleration = 2500.0
-@export var deceleration = 4000.0
+@export var speed: float = 300.0
+@export var acceleration: float = 2500.0
+@export var deceleration: float = 4000.0
+@export var invincibility_duration: float = 1.5
 
-var shielded = false
-var attack_mode = false
-var velocity = Vector2.ZERO
+var invincible: bool = false
+var shielded: bool = false
+var attack_mode: bool = false
+var invincibility_timer: float = invincibility_duration
+var velocity: Vector2 = Vector2.ZERO
 
 var shadows: Array[Sprite2D]
-var shadow_count = 3
+var shadow_count: int = 3
 
 func powerup_shield() -> void:
 	shielded = true
 	$ShieldSprite.show()
 
 func powerup_shield_stop() -> void:
+	invincible = true
 	shielded = false
 	$ShieldSprite.hide()
 
@@ -29,16 +33,22 @@ func powerup_attack_stop() -> void:
 	attack_mode = false
 	$AttackSprite.hide()
 
-func start(pos: Vector2):
+func toggle_visibility(should_be_visible: bool) -> void:
+	visible = should_be_visible
+	for shadow in shadows:
+		shadow.visible = should_be_visible
+
+func start(pos: Vector2) -> void:
 	position = pos
-	for i in range(shadow_count):
-		shadows[i].position = pos
-		shadows[i].show()
+	for shadow in shadows:
+		shadow.position = pos
+	toggle_visibility(true)
 
 	powerup_shield_stop()
 	powerup_attack_stop()
-	show()
 	$CollisionShape2D.disabled = false
+	invincible = false
+	invincibility_timer = invincibility_duration
 
 func _ready() -> void:
 	var shadow_alpha_unit = 1.0 / (shadow_count + 1.0)
@@ -66,20 +76,24 @@ func _process(delta: float) -> void:
 		for i in range(shadow_count):
 			shadows[i].global_position = shadows[i].global_position.lerp(global_position, 5.0 * delta * (shadow_count - i))
 
+	if invincible:
+		invincibility_timer -= delta
+		toggle_visibility(not visible)
+
+		if invincibility_timer <= 0.0:
+			invincibility_timer = invincibility_timer
+			invincible = false
+			toggle_visibility(true)
+
 func _on_body_entered(body: Node2D) -> void:
-	if attack_mode:
+	if attack_mode or shielded:
 		enemy_killed.emit(body)
 		body.queue_free()
+		if not attack_mode and shielded:
+			powerup_shield_stop()
 		return
 
-	if shielded:
-		enemy_killed.emit(body)
-		body.queue_free()
-		powerup_shield_stop()
-		return
-
-	for i in range(shadow_count):
-		shadows[i].hide()
-	hide()
-	hit.emit()
-	$CollisionShape2D.set_deferred("disabled", true)
+	if not invincible:
+		hit.emit()
+		toggle_visibility(false)
+		$CollisionShape2D.set_deferred("disabled", true)

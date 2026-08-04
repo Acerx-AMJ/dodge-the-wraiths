@@ -20,12 +20,6 @@
 [ext_resource type="Texture2D" uid="uid://c55v5exj1a15g" path="res://art/vignette.png" id="16_muem4"]
 [ext_resource type="Script" uid="uid://v5lshf1rcc75" path="res://scripts/vignette.gd" id="17_dp3eg"]
 
-[sub_resource type="Curve2D" id="Curve2D_lquwl"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 480, 0, 0, 0, 0, 0, 480, 720, 0, 0, 0, 0, 0, 720, 0, 0, 0, 0, 0, 0)
-}
-point_count = 5
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_a8y0u"]
 particles_animation = true
 particles_anim_h_frames = 4
@@ -94,6 +88,17 @@ powerup_scene = ExtResource("3_7mycd")
 offset = Vector2(240, 360)
 script = ExtResource("14_a8y0u")
 
+[node name="Vignette" type="TextureRect" parent="." unique_id=186998855]
+modulate = Color(1, 0, 0, 0)
+z_index = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("16_muem4")
+script = ExtResource("17_dp3eg")
+
 [node name="ViewportSize" type="Control" parent="." unique_id=1037861142]
 layout_mode = 3
 anchors_preset = 15
@@ -118,18 +123,6 @@ color = Color(0.36313483, 0.1456523, 0.20403045, 1)
 
 [node name="Player" parent="." unique_id=1073304146 instance=ExtResource("1_ig7tw")]
 visible = false
-
-[node name="StartTimer" type="Timer" parent="." unique_id=18364025]
-wait_time = 2.0
-one_shot = true
-
-[node name="StartPosition" type="Marker2D" parent="." unique_id=147202057]
-position = Vector2(240, 450)
-
-[node name="MobPath" type="Path2D" parent="." unique_id=307511513]
-curve = SubResource("Curve2D_lquwl")
-
-[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath" unique_id=1235343316]
 
 [node name="HUD" parent="." unique_id=1751554729 instance=ExtResource("4_1bvp3")]
 
@@ -165,18 +158,6 @@ stream = ExtResource("12_jkv2x")
 [node name="Kill4" type="AudioStreamPlayer2D" parent="KillSounds" unique_id=1737288976]
 stream = ExtResource("13_jbj1t")
 
-[node name="Vignette" type="TextureRect" parent="." unique_id=186998855]
-modulate = Color(1, 0, 0, 0)
-z_index = 2
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("16_muem4")
-script = ExtResource("17_dp3eg")
-
 [connection signal="enemy_killed" from="Player" to="." method="_on_player_enemy_killed"]
 [connection signal="hit" from="Player" to="." method="_on_player_hit"]
-[connection signal="timeout" from="StartTimer" to="." method="_on_start_timer_timeout"]
 [connection signal="start_game" from="HUD" to="." method="_on_hud_start_game"]
