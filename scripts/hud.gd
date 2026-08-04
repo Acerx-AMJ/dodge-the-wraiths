@@ -4,6 +4,7 @@ signal start_game
 @export var savefile = "user://save_game.dat"
 @export var camera_shake_enabled = true
 @export var particles_enabled = true
+@export var vignette_enabled = true
 
 var music_volume = 1
 var sfx_volume = 1
@@ -14,12 +15,13 @@ func _ready() -> void:
 	var file = FileAccess.open(savefile, FileAccess.READ)
 	if file:
 		var config = file.get_var()
-		music_volume = config["music_volume"] if config.has("music_volume") else 1
-		sfx_volume = config["sfx_volume"] if config.has("sfx_volume") else 1
-		high_score = config["high_score"] if config.has("high_score") else 0
-		total_score = config["total_score"] if config.has("total_score") else 0
-		camera_shake_enabled = config["camera_shake_enabled"] if config.has("camera_shake_enabled") else true
-		particles_enabled = config["particles_enabled"] if config.has("particles_enabled") else true
+		if config.has("music_volume"):         music_volume = config["music_volume"]
+		if config.has("sfx_volume"):           sfx_volume = config["sfx_volume"]
+		if config.has("high_score"):           high_score = config["high_score"]
+		if config.has("total_score"):          total_score = config["total_score"]
+		if config.has("camera_shake_enabled"): camera_shake_enabled = config["camera_shake_enabled"]
+		if config.has("particles_enabled"):    particles_enabled = config["particles_enabled"]
+		if config.has("vignette_enabled"):     vignette_enabled = config["vignette_enabled"]
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
@@ -33,6 +35,7 @@ func _ready() -> void:
 
 	$Options/CameraShake.button_pressed = camera_shake_enabled
 	$Options/Particles.button_pressed = particles_enabled
+	$Options/Vignette.button_pressed = vignette_enabled
 
 	$ScoreLabel.text = str("HS: ", high_score)
 	get_tree().set_auto_accept_quit(false)
@@ -46,6 +49,7 @@ func quit() -> void:
 		"total_score": total_score,
 		"camera_shake_enabled": camera_shake_enabled,
 		"particles_enabled": particles_enabled,
+		"vignette_enabled": vignette_enabled,
 	})
 	get_tree().quit()
 
@@ -124,3 +128,6 @@ func _on_camera_shake_toggled(toggled_on: bool) -> void:
 
 func _on_particles_toggled(toggled_on: bool) -> void:
 	particles_enabled = toggled_on
+
+func _on_vignette_toggled(toggled_on: bool) -> void:
+	vignette_enabled = toggled_on

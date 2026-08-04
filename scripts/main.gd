@@ -45,6 +45,7 @@ var powerup_types = [{
 func powerup_slow(duration: float) -> void:
 	$MobTimer.wait_time = mob_spawn_speed * 4
 	slow_timer += duration
+	$Vignette.apply(Color.WEB_GRAY, 0.5, slow_timer)
 
 func powerup_shield(_duration: float) -> void:
 	$Player.powerup_shield()
@@ -57,6 +58,7 @@ func powerup_clear(_duration: float) -> void:
 	score += get_tree().get_node_count_in_group("mobs") * score_from_killing_enemy
 	$HUD.update_score(score)
 	$Camera2D.shake(15.0, 5.0)
+	$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
 
 	for enemy in get_tree().get_nodes_in_group("mobs"):
 		var sprite = enemy.get_node("AnimatedSprite2D")
@@ -125,6 +127,7 @@ func _on_player_enemy_killed(enemy: Node2D) -> void:
 	score += score_from_killing_enemy
 	$HUD.update_score(score)
 	$Camera2D.shake(10.0, 7.5)
+	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
 	
 	var sprite = enemy.get_node("AnimatedSprite2D")
 	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
@@ -133,6 +136,7 @@ func _on_player_enemy_killed(enemy: Node2D) -> void:
 
 func _on_player_hit() -> void:
 	$Camera2D.shake(15.0, 5.0)
+	$Vignette.apply(Color.DARK_RED, 1.0, 3.0)
 	spawn_death_particles($Player/Sprite.texture, $Player.position)
 	game_over()
 
