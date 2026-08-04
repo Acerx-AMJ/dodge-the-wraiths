@@ -3,24 +3,21 @@ extends Node
 @export var boss_scenes: Array[PackedScene]
 @export var powerup_scene: PackedScene
 
-@export var mob_spawn_speed_initial: float = 0.5
-@export var boss_spawn_speed_initial: float = 12.0
-@export var powerup_spawn_speed_initial: float = 7.5
+@export var mob_spawn_speed: float = 0.5
+@export var boss_spawn_speed: float = 12.0
+@export var powerup_spawn_speed: float = 7.5
 @export var score_speed: float = 1.0
 
-var mob_spawn_speed: float = mob_spawn_speed_initial
-var boss_spawn_speed: float = boss_spawn_speed_initial
-var powerup_spawn_speed: float = powerup_spawn_speed_initial
-
-var mob_timer: float = mob_spawn_speed_initial
-var boss_timer: float = boss_spawn_speed_initial
-var powerup_timer: float = powerup_spawn_speed_initial
+var mob_timer: float = mob_spawn_speed
+var boss_timer: float = boss_spawn_speed
+var powerup_timer: float = powerup_spawn_speed
 var score_timer: float = score_speed
 var attack_timer: float = 0
 var slow_timer: float = 0
 
 var start_timers: bool = false
 var is_playing: bool = false
+var is_slowed: bool = false
 var score: int = 0
 
 var powerup_types = [{
@@ -51,10 +48,8 @@ var powerup_types = [{
 }]
 
 func powerup_slow(duration: float) -> void:
-	mob_spawn_speed = mob_spawn_speed_initial * 3
-	boss_spawn_speed = boss_spawn_speed_initial * 3
+	is_slowed = true
 	slow_timer += duration
-	$Vignette.apply(Color.WEB_GRAY, 0.5, slow_timer)
 
 func powerup_shield(_duration: float) -> void:
 	$Player.powerup_shield()
@@ -88,13 +83,14 @@ func game_over():
 
 func new_game():
 	is_playing = true
+	is_slowed = false
 	score = 0
 	attack_timer = 0
 	slow_timer = 0
 	score_timer = score_speed
-	powerup_timer = powerup_spawn_speed_initial
-	mob_timer = mob_spawn_speed_initial
-	boss_timer = boss_spawn_speed_initial
+	powerup_timer = powerup_spawn_speed
+	mob_timer = mob_spawn_speed
+	boss_timer = boss_spawn_speed
 
 	get_tree().call_group("mobs", "queue_free")
 	get_tree().call_group("powerups", "queue_free")
@@ -117,16 +113,16 @@ func _process(delta: float) -> void:
 	if slow_timer > 0.0:
 		slow_timer = max(0.0, slow_timer - delta)
 		if slow_timer == 0.0:
-			mob_spawn_speed = mob_spawn_speed_initial
-			boss_spawn_speed = boss_spawn_speed_initial
+			is_slowed = false
 	$HUD.display_powerup_info(attack_timer, slow_timer)
 
 	if not start_timers: return
-	mob_timer -= delta
-	boss_timer -= delta
+	var slowed = delta / 3.0 if is_slowed else delta
+	mob_timer -= slowed
+	boss_timer -= slowed
 	powerup_timer -= delta
 	score_timer -= delta
-	
+
 	if mob_timer <= 0.0:
 		spawn_mob()
 		mob_timer += mob_spawn_speed * randf_range(0.8, 1.2)

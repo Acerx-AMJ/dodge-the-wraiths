@@ -16,6 +16,7 @@
 [ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://art/kill2.wav" id="11_a8y0u"]
 [ext_resource type="AudioStream" uid="uid://cffd57k1jms2b" path="res://art/kill3.wav" id="12_jkv2x"]
 [ext_resource type="AudioStream" uid="uid://grpaqeqdktu7" path="res://art/kill4.wav" id="13_jbj1t"]
+[ext_resource type="Texture2D" uid="uid://cqr38e66cbs0" path="res://art/background_carnage.png" id="13_yc10j"]
 [ext_resource type="Script" uid="uid://ck8mfnsxrkt5y" path="res://scripts/camera_2d.gd" id="14_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://djllqkwndm8fs" path="res://art/fish1.png" id="15_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://c55v5exj1a15g" path="res://art/vignette.png" id="16_muem4"]
@@ -109,7 +110,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=642008054]
-z_index = -2
+modulate = Color(0.62908286, 0.62908286, 0.62908286, 1)
+z_index = -3
 anchors_preset = -1
 anchor_left = -0.5
 anchor_top = -0.5
@@ -120,7 +122,17 @@ offset_bottom = -720.0001
 grow_horizontal = 0
 grow_vertical = 0
 scale = Vector2(2, 2)
-color = Color(0.36313483, 0.1456523, 0.20403045, 1)
+color = Color(0.25882354, 0, 0.050980393, 1)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=115224258]
+modulate = Color(0.62908286, 0.62908286, 0.62908286, 1)
+z_index = -2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_yc10j")
 
 [node name="Player" parent="." unique_id=1073304146 instance=ExtResource("1_ig7tw")]
 visible = false
