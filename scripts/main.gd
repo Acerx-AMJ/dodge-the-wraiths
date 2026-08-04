@@ -4,7 +4,7 @@ extends Node
 @export var powerup_scene: PackedScene
 
 @export var mob_spawn_speed_initial: float = 0.5
-@export var boss_spawn_speed_initial: float = 15.0
+@export var boss_spawn_speed_initial: float = 12.0
 @export var powerup_spawn_speed_initial: float = 7.5
 @export var score_speed: float = 1.0
 
@@ -152,28 +152,28 @@ func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	await particles.finished
 	particles.queue_free()
 
-# [0] - location, [1] - rotation
+# [0] - location, [1] - rotation, [2] - flip V
 func get_spawn_location() -> Array:
 	var size = $ViewportSize.size
 	var side = randi() % 4
 	if side % 2: # right and left
-		return [Vector2(size.x if side == 1 else 0, randf_range(100.0, size.y - 200.0)), PI if side == 1 else TAU]
+		return [Vector2(size.x if side == 1 else 0, randf_range(100.0, size.y - 200.0)), PI if side == 1 else TAU, side == 1]
 	else: # top and bottom
-		return [Vector2(randf_range(100.0, size.x - 200.0), 0 if side == 0 else size.y), PI / 2 if side == 0 else 3 * PI / 2]
+		return [Vector2(randf_range(100.0, size.x - 200.0), 0 if side == 0 else size.y), PI / 2 if side == 0 else 3 * PI / 2, false]
 
 func spawn_mob() -> void:
 	var mob = mob_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	mob.position = spawn[0]
 	add_child(mob)
-	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4))
+	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4), spawn[2])
 
 func spawn_boss() -> void:
 	var boss = boss_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	boss.position = spawn[0]
 	add_child(boss)
-	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4))
+	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4), spawn[2])
 
 func spawn_powerup() -> void:
 	var powerup_type = powerup_types.pick_random()

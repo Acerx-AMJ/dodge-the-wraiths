@@ -1,9 +1,9 @@
 extends CharacterBody2D
-@export var velocity_min: float = 150.0
-@export var velocity_max: float = 250.0
-@export var jump_height: float = -75.0
-@export var jump_length_min: float = 0.8
-@export var jump_length_max: float = 1.2
+@export var velocity_min: float = 75.0
+@export var velocity_max: float = 150.0
+@export var jump_height: float = -120.0
+@export var jump_length_min: float = 1.6
+@export var jump_length_max: float = 2.4
 
 var real_position: Vector2
 var velocity_rotation: float

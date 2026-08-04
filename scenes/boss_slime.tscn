@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://belyctqrieh0h"]
+
+[ext_resource type="Script" uid="uid://c22ktyifn6b80" path="res://scripts/boss_slime.gd" id="1_7lci5"]
+[ext_resource type="Texture2D" uid="uid://cq28yh3kmhwv3" path="res://art/shadow.png" id="2_vd2mp"]
+[ext_resource type="Texture2D" uid="uid://cuy5j2kqir43y" path="res://art/slime_large1.png" id="3_7lci5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vd2mp"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3e0i"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(129, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1vp13"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(0, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hrocv"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(129, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dqhhl"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(0, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_38w3x"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(129, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_440ty"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(0, 387, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6tf8"]
+atlas = ExtResource("3_7lci5")
+region = Rect2(129, 387, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vd2mp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r3e0i")
+}],
+"loop": 1,
+"name": &"slime1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1vp13")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hrocv")
+}],
+"loop": 1,
+"name": &"slime2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dqhhl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_38w3x")
+}],
+"loop": 1,
+"name": &"slime3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_440ty")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m6tf8")
+}],
+"loop": 1,
+"name": &"slime4",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lq8xf"]
+radius = 69.0
+height = 166.0
+
+[node name="MobSlime" type="CharacterBody2D" unique_id=1233878181 groups=["mobs"]]
+collision_mask = 0
+script = ExtResource("1_7lci5")
+metadata/_edit_group_ = true
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=677045502]
+visible = false
+z_index = -1
+position = Vector2(0, 30)
+scale = Vector2(2, 2)
+texture = ExtResource("2_vd2mp")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"slime4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(0, 28)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_lq8xf")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-84, -43, 171, 139)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
