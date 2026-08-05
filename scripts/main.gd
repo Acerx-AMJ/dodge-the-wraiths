@@ -22,6 +22,25 @@ var is_slowed: bool = false
 var is_score_doubled: bool = false
 var score: int = 0
 
+@onready var music_pool: Array[Node]
+var current_music: AudioStreamPlayer2D
+
+func play_random_song() -> void:
+	if current_music.playing: return
+	var picked: AudioStreamPlayer2D = music_pool.pick_random()
+	while music_pool.size() > 1 and picked == current_music:
+		picked = music_pool.pick_random()
+
+	current_music = picked
+	current_music.play()
+	current_music.finished.connect(func():
+		await get_tree().create_timer(randf_range(1.0, 6.0)).timeout
+		play_random_song())
+
+func _ready() -> void:
+	music_pool = $Music.get_children()
+	play_random_song()
+
 # Name, function
 # There must be a function 'NAME', sound effect in res://sounds/'NAME'.wav and sprite in res://art/'NAME'.png
 # Not the best way to handle it but it reduces boilerplate
@@ -54,7 +73,6 @@ func game_over():
 	start_timers = false
 	is_playing = false
 	$HUD.game_over()
-	$Music.stop()
 	$DeathSound.play()
 
 func new_game():
@@ -74,8 +92,6 @@ func new_game():
 	get_tree().call_group("powerups", "queue_free")
 
 	$Player.start($ViewportSize.size / 2)
-	$Music.play()
-
 	$HUD.update_score(score)
 	$HUD.show_message("Get Ready...")
 
