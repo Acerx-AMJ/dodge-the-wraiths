@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://bb0kbif6ac3d0"
-path="res://.godot/imported/shield.wav-e0297cd7081668a743cdbbb145b29c18.sample"
+path="res://.godot/imported/powerup_shield.wav-7ced77415f55b01e7ec94cbdbc80452c.sample"
 
 [deps]
 
-source_file="res://art/shield.wav"
-dest_files=["res://.godot/imported/shield.wav-e0297cd7081668a743cdbbb145b29c18.sample"]
+source_file="res://sounds/powerup_shield.wav"
+dest_files=["res://.godot/imported/powerup_shield.wav-7ced77415f55b01e7ec94cbdbc80452c.sample"]
 
 [params]
 

@@ -20,59 +20,33 @@ var is_playing: bool = false
 var is_slowed: bool = false
 var score: int = 0
 
-var powerup_types = [{
-	"function": "powerup_slow",
-	"duration": 10.0,
-	"sprite": "res://art/powerup_slow.png",
-	"sound": "res://art/slow.wav"
-}, {
-	"function": "powerup_shield",
-	"duration": 0.0,
-	"sprite": "res://art/powerup_shield.png",
-	"sound": "res://art/shield.wav"
-}, {
-	"function": "powerup_score",
-	"duration": 0.0,
-	"sprite": "res://art/powerup_score.png",
-	"sound": "res://art/score.wav"
-}, {
-	"function": "powerup_clear",
-	"duration": 0.0,
-	"sprite": "res://art/powerup_clear.png",
-	"sound": "res://art/clear.wav"
-}, {
-	"function": "powerup_attack",
-	"duration": 5.0,
-	"sprite": "res://art/powerup_attack.png",
-	"sound": "res://art/attack.wav"
-}]
+# Name, function
+# There must be a function 'NAME', sound effect in res://sounds/'NAME'.wav and sprite in res://art/'NAME'.png
+# Not the best way to handle it but it reduces boilerplate
+var powerup_types = [
+	["powerup_slow", func() -> void:
+		is_slowed = true
+		slow_timer += 10.0],
+	["powerup_shield", func() -> void:
+		$Player.powerup_shield()],
+	["powerup_score", func() -> void:
+		score += 20
+		$HUD.update_score(score)],
+	["powerup_clear", func() -> void:
+		score += get_tree().get_node_count_in_group("mobs") * 3
+		$HUD.update_score(score)
+		$Camera2D.shake(15.0, 5.0)
+		$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
 
-func powerup_slow(duration: float) -> void:
-	is_slowed = true
-	slow_timer += duration
-
-func powerup_shield(_duration: float) -> void:
-	$Player.powerup_shield()
-
-func powerup_score(_duration: float) -> void:
-	score += 20
-	$HUD.update_score(score)
-
-func powerup_clear(_duration: float) -> void:
-	score += get_tree().get_node_count_in_group("mobs") * 3
-	$HUD.update_score(score)
-	$Camera2D.shake(15.0, 5.0)
-	$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
-
-	for enemy in get_tree().get_nodes_in_group("mobs"):
-		var sprite = enemy.get_node("AnimatedSprite2D")
-		var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
-		spawn_death_particles(texture, enemy.position)
-		enemy.queue_free()
-
-func powerup_attack(duration: float) -> void:
-	$Player.powerup_attack()
-	attack_timer += duration
+		for enemy in get_tree().get_nodes_in_group("mobs"):
+			var sprite = enemy.get_node("AnimatedSprite2D")
+			var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+			spawn_death_particles(texture, enemy.position)
+			enemy.queue_free()],
+	["powerup_attack", func() -> void:
+		$Player.powerup_attack()
+		attack_timer += 5.0],
+]
 
 func game_over():
 	start_timers = false
@@ -174,14 +148,13 @@ func spawn_boss() -> void:
 func spawn_powerup() -> void:
 	var powerup_type = powerup_types.pick_random()
 	var powerup = powerup_scene.instantiate()
-	var texture = load(powerup_type["sprite"])
+	var texture = load(str("res://art/", powerup_type[0], ".png"))
 
 	powerup.position = Vector2(randf_range(0.0, $ViewportSize.size.x), randf_range(0.0, $ViewportSize.size.y)) # Cheaty
-	powerup.function = powerup_type["function"]
-	powerup.duration = powerup_type["duration"]
+	powerup.function = powerup_type[1]
 	powerup.get_node("Sprite2D").texture = texture
 	powerup.get_node("Particles").texture = texture
-	powerup.get_node("Sound").stream = load(powerup_type["sound"])
+	powerup.get_node("Sound").stream = load(str("res://sounds/", powerup_type[0], ".wav"))
 	add_child(powerup)
 
 func _on_player_enemy_killed(enemy: Node2D) -> void:

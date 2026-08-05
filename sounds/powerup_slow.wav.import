@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://kmqm3mqubq1v"
-path="res://.godot/imported/slime_land.wav-9e910258a11be6ecf104f81e4a34029d.sample"
+uid="uid://be36katk6lrvg"
+path="res://.godot/imported/powerup_slow.wav-5fb1d06ef6abea3333e40ec00df1a099.sample"
 
 [deps]
 
-source_file="res://art/slime_land.wav"
-dest_files=["res://.godot/imported/slime_land.wav-9e910258a11be6ecf104f81e4a34029d.sample"]
+source_file="res://sounds/powerup_slow.wav"
+dest_files=["res://.godot/imported/powerup_slow.wav-5fb1d06ef6abea3333e40ec00df1a099.sample"]
 
 [params]
 

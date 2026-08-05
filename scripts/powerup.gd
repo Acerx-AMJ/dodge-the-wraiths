@@ -1,9 +1,8 @@
 extends Area2D
-@export var function: String
-@export var duration: float
+@export var function: Callable
 
 func _on_area_entered(_area: Area2D) -> void:
-	get_parent().call(function, duration)
+	function.call()
 	$Sound.play()
 	$Sprite2D.hide()
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -14,5 +13,4 @@ func _on_area_entered(_area: Area2D) -> void:
 		await get_tree().create_timer(wait_time).timeout
 	else:
 		await $Sound.finished
-
 	queue_free()

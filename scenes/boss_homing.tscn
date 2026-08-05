@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b7nmjr72bmyrk" path="res://scripts/boss_homing.gd" id="1_obne2"]
 [ext_resource type="Texture2D" uid="uid://btn6j7xyrpsa7" path="res://art/eye_large1.png" id="2_obne2"]
-[ext_resource type="AudioStream" uid="uid://lr1w8qi4wwqd" path="res://art/dash.wav" id="3_xmt2o"]
+[ext_resource type="AudioStream" uid="uid://lr1w8qi4wwqd" path="res://sounds/dash.wav" id="3_xmt2o"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xmt2o"]
 atlas = ExtResource("2_obne2")
@@ -37,7 +37,7 @@ metadata/_edit_group_ = true
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
 sprite_frames = SubResource("SpriteFrames_kyu3p")
 animation = &"idle"
-frame_progress = 0.2936188
+frame_progress = 0.41786414
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
 position = Vector2(18, 0)
