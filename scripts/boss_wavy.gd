@@ -32,11 +32,13 @@ func _process(delta: float) -> void:
 
 	demon_summon_timer -= delta
 	if demon_summon_timer <= 0.0:
-		for i in range(3):
-			summon_demon(i * TAU / 3)
+		var demon_count = randi_range(2, 4)
+		for i in range(demon_count):
+			summon_demon(i * TAU / demon_count)
 		demon_summon_timer += demon_summon_time
 		var texture = $AnimatedSprite2D.sprite_frames.get_frame_texture($AnimatedSprite2D.animation, $AnimatedSprite2D.get_frame())
 		get_parent().spawn_death_particles(texture, position)
+		$SummonSound.play()
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	queue_free()

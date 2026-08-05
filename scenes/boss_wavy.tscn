@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c2s3wovni8yj" path="res://scripts/boss_wavy.gd" id="1_yu383"]
 [ext_resource type="Texture2D" uid="uid://dugljgjd4o4p4" path="res://art/demon_large1.png" id="2_kdxhb"]
 [ext_resource type="PackedScene" uid="uid://c8imul6yqqag2" path="res://scenes/mob_wavy.tscn" id="2_t4pgt"]
+[ext_resource type="AudioStream" uid="uid://dse2g1vlyf6ur" path="res://art/spawn.wav" id="4_t4pgt"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t4pgt"]
 atlas = ExtResource("2_kdxhb")
@@ -104,5 +105,8 @@ shape = SubResource("CircleShape2D_pbgio")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
 rect = Rect2(-51, -64, 106, 128)
+
+[node name="SummonSound" type="AudioStreamPlayer2D" parent="." unique_id=1039115044]
+stream = ExtResource("4_t4pgt")
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

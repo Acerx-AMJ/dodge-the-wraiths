@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c22ktyifn6b80" path="res://scripts/boss_slime.gd" id="1_7lci5"]
 [ext_resource type="Texture2D" uid="uid://cq28yh3kmhwv3" path="res://art/shadow.png" id="2_vd2mp"]
 [ext_resource type="Texture2D" uid="uid://cuy5j2kqir43y" path="res://art/slime_large1.png" id="3_7lci5"]
+[ext_resource type="AudioStream" uid="uid://kmqm3mqubq1v" path="res://art/slime_land.wav" id="4_vd2mp"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vd2mp"]
 atlas = ExtResource("3_7lci5")
@@ -111,5 +112,8 @@ shape = SubResource("CapsuleShape2D_lq8xf")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
 rect = Rect2(-84, -43, 171, 139)
+
+[node name="LandSound" type="AudioStreamPlayer2D" parent="." unique_id=515198839]
+stream = ExtResource("4_vd2mp")
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

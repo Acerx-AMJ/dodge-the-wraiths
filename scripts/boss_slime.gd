@@ -31,6 +31,8 @@ func _process(delta: float) -> void:
 	if jumping:
 		jump_timer += delta
 		jumping = jump_timer < jump_length
+		if jump_timer >= jump_length:
+			$LandSound.play()
 
 		real_position += velocity * delta
 		$Shadow.global_position = real_position

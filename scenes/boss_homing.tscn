@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://cwovudvddrmw0"]
+
+[ext_resource type="Script" uid="uid://b7nmjr72bmyrk" path="res://scripts/boss_homing.gd" id="1_obne2"]
+[ext_resource type="Texture2D" uid="uid://btn6j7xyrpsa7" path="res://art/eye_large1.png" id="2_obne2"]
+[ext_resource type="AudioStream" uid="uid://lr1w8qi4wwqd" path="res://art/dash.wav" id="3_xmt2o"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xmt2o"]
+atlas = ExtResource("2_obne2")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdoyo"]
+atlas = ExtResource("2_obne2")
+region = Rect2(129, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xmt2o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdoyo")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pkegy"]
+radius = 42.047592
+
+[node name="BossHoming" type="CharacterBody2D" unique_id=583409409 groups=["mobs"]]
+collision_mask = 0
+script = ExtResource("1_obne2")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"idle"
+frame_progress = 0.2936188
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(18, 0)
+rotation = 1.5707964
+shape = SubResource("CircleShape2D_pkegy")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-62, -43, 122, 94)
+
+[node name="DashSound" type="AudioStreamPlayer2D" parent="." unique_id=2051533456]
+stream = ExtResource("3_xmt2o")
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
