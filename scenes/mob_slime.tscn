@@ -87,7 +87,7 @@ animations = [{
 radius = 16.0
 height = 42.0
 
-[node name="MobSlime" type="CharacterBody2D" unique_id=1233878181 groups=["mobs"]]
+[node name="MobSlime" type="CharacterBody2D" unique_id=1233878181 groups=["mobs", "non_boss"]]
 collision_mask = 0
 script = ExtResource("1_0gehn")
 metadata/_edit_group_ = true

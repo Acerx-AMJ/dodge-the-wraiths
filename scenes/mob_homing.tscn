@@ -28,7 +28,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_pkegy"]
 radius = 20.0
 
-[node name="MobHoming" type="CharacterBody2D" unique_id=583409409 groups=["mobs"]]
+[node name="MobHoming" type="CharacterBody2D" unique_id=583409409 groups=["mobs", "non_boss"]]
 collision_mask = 0
 script = ExtResource("1_ocyic")
 metadata/_edit_group_ = true

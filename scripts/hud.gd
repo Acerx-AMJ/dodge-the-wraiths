@@ -57,12 +57,14 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
-func display_powerup_info(attack_timer: float, slow_timer: float) -> void:
+func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: float) -> void:
 	var text = ""
-	if attack_timer > 0:
+	if attack_timer > 0.0:
 		text = str(text, "ATK ", round(attack_timer * 10.0) / 10.0, "\n")
-	if slow_timer > 0:
-		text = str(text, "SLW ", round(slow_timer * 10.0) / 10.0, "\n")
+	if slow_timer > 0.0:
+		text = str(text, "SLOW ", round(slow_timer * 10.0) / 10.0, "\n")
+	if double_timer > 0.0:
+		text = str(text, "2X ", round(double_timer * 10.0) / 10.0, "\n")
 	$Powerups.text = text
 
 func show_message(text: String):

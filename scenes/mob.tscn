@@ -66,7 +66,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_pbgio"]
 radius = 20.0
 
-[node name="Mob" type="CharacterBody2D" unique_id=1233878181 groups=["mobs"]]
+[node name="Mob" type="CharacterBody2D" unique_id=1233878181 groups=["mobs", "non_boss"]]
 collision_mask = 0
 script = ExtResource("1_1qmh0")
 metadata/_edit_group_ = true

@@ -29,7 +29,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_pkegy"]
 radius = 42.047592
 
-[node name="BossHoming" type="CharacterBody2D" unique_id=583409409 groups=["mobs"]]
+[node name="BossHoming" type="CharacterBody2D" unique_id=583409409 groups=["boss", "mobs"]]
 collision_mask = 0
 script = ExtResource("1_obne2")
 metadata/_edit_group_ = true

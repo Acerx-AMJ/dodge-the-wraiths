@@ -48,7 +48,7 @@ animations = [{
 radius = 20.0
 height = 46.0
 
-[node name="MobFish" type="CharacterBody2D" unique_id=1233878181 groups=["mobs"]]
+[node name="MobFish" type="CharacterBody2D" unique_id=1233878181 groups=["mobs", "non_boss"]]
 collision_mask = 0
 script = ExtResource("1_k4ufg")
 metadata/_edit_group_ = true

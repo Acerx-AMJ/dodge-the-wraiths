@@ -24,6 +24,8 @@ window/stretch/mode="canvas_items"
 
 powerups=""
 mobs=""
+boss=""
+non_boss=""
 
 [input]
 

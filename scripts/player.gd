@@ -30,6 +30,7 @@ func powerup_attack() -> void:
 	$AttackSprite.show()
 
 func powerup_attack_stop() -> void:
+	invincible = true
 	attack_mode = false
 	$AttackSprite.hide()
 
@@ -81,19 +82,21 @@ func _process(delta: float) -> void:
 		toggle_visibility(not visible)
 
 		if invincibility_timer <= 0.0:
-			invincibility_timer = invincibility_timer
+			invincibility_timer = invincibility_duration
 			invincible = false
 			toggle_visibility(true)
 
 func _on_body_entered(body: Node2D) -> void:
+	if invincible: return # Avoid using shield when invincible
+
 	if attack_mode or shielded:
-		enemy_killed.emit(body)
+		enemy_killed.emit(body, body.is_in_group("boss"))
 		body.queue_free()
 		if not attack_mode and shielded:
 			powerup_shield_stop()
 		return
 
-	if not invincible:
+	if not invincible: # Avoid dying instantly upon shield usage
 		hit.emit()
 		toggle_visibility(false)
 		$CollisionShape2D.set_deferred("disabled", true)

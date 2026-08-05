@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://djllqkwndm8fs" path="res://art/fish1.png" id="15_jkv2x"]
 [ext_resource type="Texture2D" uid="uid://c55v5exj1a15g" path="res://art/vignette.png" id="16_muem4"]
 [ext_resource type="Script" uid="uid://v5lshf1rcc75" path="res://scripts/vignette.gd" id="17_dp3eg"]
+[ext_resource type="AudioStream" uid="uid://d0gdoftvswu7h" path="res://sounds/powerup_spawn.wav" id="19_pm3ni"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_a8y0u"]
 particles_animation = true
@@ -156,6 +157,10 @@ bus = &"Music"
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="." unique_id=237897867]
 stream = ExtResource("9_85g3d")
+bus = &"SFX"
+
+[node name="PowerupSpawnSound" type="AudioStreamPlayer2D" parent="." unique_id=144742592]
+stream = ExtResource("19_pm3ni")
 bus = &"SFX"
 
 [node name="KillSounds" type="Node" parent="." unique_id=552287460]
