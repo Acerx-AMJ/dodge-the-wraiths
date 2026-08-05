@@ -5,7 +5,7 @@ extends CharacterBody2D
 var player: Area2D
 var initial_velocity: Vector2
 
-func init(direction: float, _flip_v: bool) -> void:
+func init(direction: float) -> void:
 	var vel = Vector2(randf_range(velocity_min, velocity_max), 0.0)
 	rotation = direction
 	initial_velocity = vel

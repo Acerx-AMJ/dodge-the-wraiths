@@ -9,20 +9,20 @@ var initial_velocity: Vector2
 var initial_rotation: float
 var timer: float = PI
 
-func init(direction: float, flip_v: bool) -> void:
+func init(direction: float) -> void:
 	var vel = Vector2(randf_range(velocity_min, velocity_max), 0.0)
 	rotation = direction
 	velocity = vel.rotated(direction)
 	initial_velocity = vel
 	initial_rotation = direction
-	$AnimatedSprite2D.flip_v = flip_v
+	$AnimatedSprite2D.flip_v = (rotation > PI / 2 and rotation < 3 * PI / 2)
 	$AnimatedSprite2D.play(Array($AnimatedSprite2D.sprite_frames.get_animation_names()).pick_random())
 
 func summon_demon(angle: float) -> void:
 	var demon = demon_scene.instantiate()
 	demon.position = position
 	get_parent().add_child(demon)
-	demon.init(angle + randf_range(-PI / 4, PI / 4), false)
+	demon.init(angle + randf_range(-PI / 4, PI / 4))
 
 func _process(delta: float) -> void:
 	timer += delta

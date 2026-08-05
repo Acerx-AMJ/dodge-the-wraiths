@@ -30,6 +30,7 @@ animations = [{
 radius = 42.047592
 
 [node name="BossHoming" type="CharacterBody2D" unique_id=583409409 groups=["boss", "mobs"]]
+scale = Vector2(1.25, 1.25)
 collision_mask = 0
 script = ExtResource("1_obne2")
 metadata/_edit_group_ = true

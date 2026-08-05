@@ -20,7 +20,7 @@ func jump() -> void:
 	delay_timer = 0.0
 	delay_length = randf_range(jump_length_min, jump_length_max)
 
-func init(direction: float, _flip_v: bool) -> void:
+func init(direction: float) -> void:
 	velocity_rotation = direction
 	velocity = Vector2(randf_range(velocity_min, velocity_max), 0.0).rotated(direction)
 	real_position = position

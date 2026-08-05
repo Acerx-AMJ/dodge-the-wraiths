@@ -6,11 +6,11 @@ extends CharacterBody2D
 
 var initial_velocity: Vector2
 
-func init(direction: float, flip_v: bool) -> void:
+func init(direction: float) -> void:
 	rotation = direction
 	initial_velocity = Vector2(randf_range(velocity_min, velocity_max), 0.0).rotated(direction)
 	velocity = Vector2(0, 0)
-	$AnimatedSprite2D.flip_v = flip_v
+	$AnimatedSprite2D.flip_v = (rotation > PI / 2 and rotation < 3 * PI / 2)
 	$AnimatedSprite2D.play(Array($AnimatedSprite2D.sprite_frames.get_animation_names()).pick_random())
 
 func _process(delta: float) -> void:

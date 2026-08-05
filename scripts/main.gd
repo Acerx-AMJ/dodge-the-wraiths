@@ -35,7 +35,6 @@ var powerup_types = [
 		add_score(20)],
 	["powerup_clear", func() -> void:
 		add_score(get_tree().get_node_count_in_group("boss") * 10 + get_tree().get_node_count_in_group("non_boss") * 3)
-		print(get_tree().get_node_count_in_group("boss"), " ", get_tree().get_node_count_in_group("non_boss"))
 		$Camera2D.shake(15.0, 5.0)
 		$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
 
@@ -134,28 +133,28 @@ func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	await particles.finished
 	particles.queue_free()
 
-# [0] - location, [1] - rotation, [2] - flip V
+# [0] - location, [1] - rotation
 func get_spawn_location() -> Array:
 	var size = $ViewportSize.size
 	var side = randi() % 4
 	if side % 2: # right and left
-		return [Vector2(size.x if side == 1 else 0, randf_range(100.0, size.y - 200.0)), PI if side == 1 else TAU, side == 1]
+		return [Vector2(size.x if side == 1 else 0, randf_range(100.0, size.y - 200.0)), PI if side == 1 else TAU]
 	else: # top and bottom
-		return [Vector2(randf_range(100.0, size.x - 200.0), 0 if side == 0 else size.y), PI / 2 if side == 0 else 3 * PI / 2, false]
+		return [Vector2(randf_range(100.0, size.x - 200.0), 0 if side == 0 else size.y), PI / 2 if side == 0 else 3 * PI / 2]
 
 func spawn_mob() -> void:
 	var mob = mob_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	mob.position = spawn[0]
 	add_child(mob)
-	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4), spawn[2])
+	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 
 func spawn_boss() -> void:
 	var boss = boss_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	boss.position = spawn[0]
 	add_child(boss)
-	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4), spawn[2])
+	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 
 func spawn_powerup() -> void:
 	var powerup_type = powerup_types.pick_random()
@@ -174,7 +173,6 @@ func _on_player_enemy_killed(enemy: Node2D, is_boss: bool) -> void:
 	var sounds = $KillSounds.get_children()
 	sounds[randi() % sounds.size()].play()
 	add_score(10 if is_boss else 3)
-	print(is_boss)
 	$Camera2D.shake(10.0, 7.5)
 	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
 
