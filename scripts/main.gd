@@ -26,7 +26,7 @@ var score: int = 0
 var current_music: AudioStreamPlayer2D
 
 func play_random_song() -> void:
-	if current_music.playing: return
+	if current_music and current_music.playing: return
 	var picked: AudioStreamPlayer2D = music_pool.pick_random()
 	while music_pool.size() > 1 and picked == current_music:
 		picked = music_pool.pick_random()
