@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cey7q3ynda82r"
-path="res://.godot/imported/Xolonium-Regular.ttf-bc2981e3069cff4c34dd7c8e2bb73fba.fontdata"
+uid="uid://b7y6yu8e7l87i"
+path="res://.godot/imported/slackey.ttf-80605aedf6749759293712c9e49162e6.fontdata"
 
 [deps]
 
-source_file="res://fonts/Xolonium-Regular.ttf"
-dest_files=["res://.godot/imported/Xolonium-Regular.ttf-bc2981e3069cff4c34dd7c8e2bb73fba.fontdata"]
+source_file="res://fonts/slackey.ttf"
+dest_files=["res://.godot/imported/slackey.ttf-80605aedf6749759293712c9e49162e6.fontdata"]
 
 [params]
 

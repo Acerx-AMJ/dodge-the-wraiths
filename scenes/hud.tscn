@@ -1,19 +1,29 @@
 [gd_scene format=3 uid="uid://dwr0vx3lc1sxo"]
 
 [ext_resource type="Script" uid="uid://n8e6iv7236yb" path="res://scripts/hud.gd" id="1_64ctp"]
-[ext_resource type="FontFile" uid="uid://cey7q3ynda82r" path="res://fonts/Xolonium-Regular.ttf" id="2_8sq4i"]
+[ext_resource type="Texture2D" uid="uid://nqngigr3202h" path="res://art/play.png" id="2_uo2fv"]
+[ext_resource type="Texture2D" uid="uid://byyd52kxhct65" path="res://art/home.png" id="3_047uy"]
+[ext_resource type="Texture2D" uid="uid://cbljxxp25d4wy" path="res://art/cogwheel.png" id="4_5pdws"]
+[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://fonts/slackey.ttf" id="5_hd3ao"]
+[ext_resource type="Texture2D" uid="uid://b2nepdhuf38o4" path="res://art/back.png" id="6_047uy"]
 
-[sub_resource type="InputEventAction" id="InputEventAction_kek77"]
+[sub_resource type="InputEventAction" id="InputEventAction_lq8xf"]
 action = &"start_game"
 
-[sub_resource type="Shortcut" id="Shortcut_272bh"]
-events = [SubResource("InputEventAction_kek77")]
+[sub_resource type="Shortcut" id="Shortcut_kyu3p"]
+events = [SubResource("InputEventAction_lq8xf")]
 
-[sub_resource type="InputEventAction" id="InputEventAction_up3gw"]
+[sub_resource type="InputEventAction" id="InputEventAction_5pdws"]
 action = &"quit_game"
 
-[sub_resource type="Shortcut" id="Shortcut_vwkeb"]
-events = [SubResource("InputEventAction_up3gw")]
+[sub_resource type="Shortcut" id="Shortcut_047uy"]
+events = [SubResource("InputEventAction_5pdws")]
+
+[sub_resource type="InputEventAction" id="InputEventAction_0i1j5"]
+action = &"quit_game"
+
+[sub_resource type="Shortcut" id="Shortcut_hd3ao"]
+events = [SubResource("InputEventAction_0i1j5")]
 
 [node name="HUD" type="CanvasLayer" unique_id=1751554729]
 script = ExtResource("1_64ctp")
@@ -30,58 +40,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StartButton" type="Button" parent="MainMenu" unique_id=39643710]
+[node name="StartButton" type="TextureButton" parent="MainMenu" unique_id=882601055]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -360.0
-offset_right = 140.0
-offset_bottom = -260.0
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
 grow_horizontal = 2
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("2_8sq4i")
-theme_override_font_sizes/font_size = 64
-shortcut = SubResource("Shortcut_272bh")
-text = "Start"
+grow_vertical = 2
+shortcut = SubResource("Shortcut_kyu3p")
+texture_normal = ExtResource("2_uo2fv")
 
-[node name="OptionsButton" type="Button" parent="MainMenu" unique_id=581096250]
+[node name="QuitButton" type="TextureButton" parent="MainMenu" unique_id=1334780965]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -234.0
-offset_right = 140.0
-offset_bottom = -134.0
+anchor_bottom = 0.5
+offset_left = 96.0
+offset_top = -32.0
+offset_right = 160.0
+offset_bottom = 32.0
 grow_horizontal = 2
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("2_8sq4i")
-theme_override_font_sizes/font_size = 64
-text = "Options"
+grow_vertical = 2
+shortcut = SubResource("Shortcut_047uy")
+texture_normal = ExtResource("3_047uy")
 
-[node name="QuitButton" type="Button" parent="MainMenu" unique_id=265399525]
+[node name="OptionsButton" type="TextureButton" parent="MainMenu" unique_id=2036172969]
 layout_mode = 1
-anchors_preset = 7
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -112.0
-offset_right = 140.0
-offset_bottom = -12.0
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -32.0
+offset_right = -96.0
+offset_bottom = 32.0
 grow_horizontal = 2
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("2_8sq4i")
-theme_override_font_sizes/font_size = 64
-shortcut = SubResource("Shortcut_vwkeb")
-text = "Quit"
+grow_vertical = 2
+texture_normal = ExtResource("4_5pdws")
 
 [node name="Options" type="Control" parent="." unique_id=197897863]
 visible = false
@@ -92,24 +96,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BackButton" type="Button" parent="Options" unique_id=458544250]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -112.0
-offset_right = 140.0
-offset_bottom = -12.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("2_8sq4i")
-theme_override_font_sizes/font_size = 64
-shortcut = SubResource("Shortcut_vwkeb")
-text = "Back"
-
 [node name="MusicSlider" type="HSlider" parent="Options" unique_id=855198836]
 layout_mode = 1
 anchors_preset = 8
@@ -118,9 +104,8 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -196.0
-offset_top = -64.0
+offset_top = -128.0
 offset_right = 196.0
-offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.0
@@ -136,7 +121,7 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 32
 text = "Music: 100%"
 
@@ -148,9 +133,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -196.0
-offset_top = -168.0
+offset_top = -232.0
 offset_right = 196.0
-offset_bottom = -40.0
+offset_bottom = -104.0
 grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.0
@@ -166,7 +151,7 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 32
 text = "SFX: 100%"
 
@@ -177,13 +162,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -177.5
-offset_top = 41.0
-offset_right = 177.5
-offset_bottom = 79.0
+offset_left = -201.0
+offset_top = -25.5
+offset_right = 201.0
+offset_bottom = 17.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Camera Shake Enabled: "
 
@@ -194,13 +179,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -177.5
-offset_top = 89.0
-offset_right = 177.5
-offset_bottom = 127.0
+offset_left = -201.0
+offset_top = 22.5
+offset_right = 201.0
+offset_bottom = 65.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Particles Enabled: "
 
@@ -211,15 +196,22 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -177.5
-offset_top = 137.0
-offset_right = 177.5
-offset_bottom = 175.0
+offset_left = -201.0
+offset_top = 70.5
+offset_right = 201.0
+offset_bottom = 113.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Vignette Enabled: "
+
+[node name="BackButton" type="TextureButton" parent="Options" unique_id=1475977328]
+layout_mode = 1
+offset_right = 64.0
+offset_bottom = 64.0
+shortcut = SubResource("Shortcut_hd3ao")
+texture_normal = ExtResource("6_047uy")
 
 [node name="ScoreLabel" type="Label" parent="." unique_id=1524536175]
 anchors_preset = 5
@@ -229,7 +221,7 @@ offset_left = -68.0
 offset_right = 68.0
 offset_bottom = 78.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 64
 text = "0"
 horizontal_alignment = 1
@@ -238,7 +230,7 @@ horizontal_alignment = 1
 visible = false
 offset_right = 136.0
 offset_bottom = 78.0
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 
 [node name="Message" type="Label" parent="." unique_id=1462933766]
@@ -249,12 +241,12 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -240.0
-offset_top = -246.0
+offset_top = -280.0
 offset_right = 240.0
-offset_bottom = -6.0
+offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_8sq4i")
+theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 64
 text = "Dodge the Wraiths!"
 horizontal_alignment = 1
@@ -263,11 +255,11 @@ autowrap_mode = 2
 
 [connection signal="timeout" from="MessageTimer" to="." method="_on_message_timer_timeout"]
 [connection signal="pressed" from="MainMenu/StartButton" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="MainMenu/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="pressed" from="MainMenu/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="Options/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="MainMenu/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="value_changed" from="Options/MusicSlider" to="." method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="Options/SoundSlider" to="." method="_on_sound_slider_value_changed"]
 [connection signal="toggled" from="Options/CameraShake" to="." method="_on_camera_shake_toggled"]
 [connection signal="toggled" from="Options/Particles" to="." method="_on_particles_toggled"]
 [connection signal="toggled" from="Options/Vignette" to="." method="_on_vignette_toggled"]
+[connection signal="pressed" from="Options/BackButton" to="." method="_on_back_button_pressed"]
