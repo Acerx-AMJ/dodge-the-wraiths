@@ -174,6 +174,7 @@ func spawn_mob() -> void:
 	var mob = mob_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	mob.position = spawn[0]
+	mob.scale *= randf_range(0.85, 1.15)
 	add_child(mob)
 	mob.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 
@@ -181,6 +182,7 @@ func spawn_boss() -> void:
 	var boss = boss_scenes.pick_random().instantiate()
 	var spawn = get_spawn_location()
 	boss.position = spawn[0]
+	boss.scale *= randf_range(0.85, 1.15)
 	add_child(boss)
 	boss.init(spawn[1] + randf_range(-PI / 4, PI / 4))
 

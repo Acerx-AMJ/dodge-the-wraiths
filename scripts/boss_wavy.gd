@@ -3,10 +3,16 @@ extends CharacterBody2D
 @export var velocity_min: float = 75.0
 @export var velocity_max: float = 150.0
 @export var demon_summon_time: float = 3.0
+@export var turn_speed_min: float = 1.5
+@export var turn_speed_max: float = 2.5
+@export var turn_amount_min: float = 0.25
+@export var turn_amount_max: float = 0.65
 
 var demon_summon_timer: float = demon_summon_time / 2.0
 var initial_velocity: Vector2
 var initial_rotation: float
+var turn_speed: float = randf_range(turn_speed_min, turn_speed_max)
+var turn_amount: float = randf_range(turn_amount_min, turn_amount_max)
 var timer: float = PI
 
 func init(direction: float) -> void:
@@ -26,7 +32,7 @@ func summon_demon(angle: float) -> void:
 
 func _process(delta: float) -> void:
 	timer += delta
-	rotation = initial_rotation + sin(timer * 2.0) * 0.4
+	rotation = initial_rotation + sin(timer * turn_speed) * turn_amount
 	velocity = initial_velocity.rotated(rotation)
 	position += velocity * delta
 
@@ -35,7 +41,8 @@ func _process(delta: float) -> void:
 		var demon_count = randi_range(2, 4)
 		for i in range(demon_count):
 			summon_demon(i * TAU / demon_count)
-		demon_summon_timer += demon_summon_time
+		demon_summon_timer += demon_summon_time * randf_range(0.8, 1.2)
+
 		var texture = $AnimatedSprite2D.sprite_frames.get_frame_texture($AnimatedSprite2D.animation, $AnimatedSprite2D.get_frame())
 		get_parent().spawn_death_particles(texture, position)
 		$SummonSound.play()

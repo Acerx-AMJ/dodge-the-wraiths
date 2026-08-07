@@ -1,11 +1,13 @@
 extends CharacterBody2D
 @export var velocity_min: float = 400.0
 @export var velocity_max: float = 600.0
-@export var slow_down_speed: float = 2.5
+@export var slow_down_speed_min: float = 2.0
+@export var slow_down_speed_max: float = 3.0
 @export var dash_zone: float = 25.0
 
 var initial_direction: float
 var initial_velocity: Vector2
+var slow_down_speed: float = randf_range(slow_down_speed_min, slow_down_speed_max)
 var flip: bool = false
 
 func init(direction: float) -> void:
@@ -25,7 +27,7 @@ func _process(delta: float) -> void:
 
 	position += velocity * delta
 	velocity *= 1.0 - delta * slow_down_speed
-	$AnimatedSprite2D.speed_scale = velocity.length() / 250
+	$AnimatedSprite2D.speed_scale = velocity.length() / velocity_max
 
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	queue_free()

@@ -1,7 +1,8 @@
 extends CharacterBody2D
 @export var velocity_min: float = 150.0
 @export var velocity_max: float = 250.0
-@export var jump_height: float = -75.0
+@export var jump_height_min: float = -60.0
+@export var jump_height_max: float = -90.0
 @export var jump_length_min: float = 0.8
 @export var jump_length_max: float = 1.2
 
@@ -12,6 +13,7 @@ var jump_length: float
 var jump_timer: float = 0.0
 var delay_length: float
 var delay_timer: float = 0.0
+var jump_height: float = randf_range(jump_height_min, jump_height_max)
 
 func jump() -> void:
 	jumping = true
