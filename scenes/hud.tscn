@@ -315,7 +315,7 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Vignette Enabled: "
 
-[node name="UIDelay" type="CheckButton" parent="OptionsMenu" unique_id=650640596]
+[node name="TextFX" type="CheckButton" parent="OptionsMenu" unique_id=634182721]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -330,9 +330,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
-text = "UI Delay Enabled: "
+text = "Text Effects Enabled: "
 
-[node name="InitDelay" type="CheckButton" parent="OptionsMenu" unique_id=14263133]
+[node name="UIDelay" type="CheckButton" parent="OptionsMenu" unique_id=650640596]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -343,6 +343,23 @@ offset_left = -201.0
 offset_top = 166.5
 offset_right = 201.0
 offset_bottom = 209.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_hd3ao")
+theme_override_font_sizes/font_size = 24
+text = "UI Delay Enabled: "
+
+[node name="InitDelay" type="CheckButton" parent="OptionsMenu" unique_id=14263133]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -201.0
+offset_top = 214.5
+offset_right = 201.0
+offset_bottom = 257.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("5_hd3ao")
@@ -360,10 +377,14 @@ texture_normal = ExtResource("6_047uy")
 
 [node name="SkipButton" type="TextureButton" parent="OptionsMenu" unique_id=2033940532]
 layout_mode = 1
-offset_left = 80.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -72.0
 offset_top = 8.0
-offset_right = 144.0
+offset_right = -8.0
 offset_bottom = 72.0
+grow_horizontal = 0
 tooltip_text = "Skip Song"
 texture_normal = ExtResource("8_hd3ao")
 
@@ -415,6 +436,7 @@ autowrap_mode = 2
 [connection signal="toggled" from="OptionsMenu/CameraShake" to="." method="_on_camera_shake_toggled"]
 [connection signal="toggled" from="OptionsMenu/Particles" to="." method="_on_particles_toggled"]
 [connection signal="toggled" from="OptionsMenu/Vignette" to="." method="_on_vignette_toggled"]
+[connection signal="toggled" from="OptionsMenu/TextFX" to="." method="_on_text_fx_toggled"]
 [connection signal="toggled" from="OptionsMenu/UIDelay" to="." method="_on_game_ui_toggled"]
 [connection signal="toggled" from="OptionsMenu/InitDelay" to="." method="_on_init_delay_toggled"]
 [connection signal="pressed" from="OptionsMenu/BackButton" to="." method="_on_back_button_pressed"]

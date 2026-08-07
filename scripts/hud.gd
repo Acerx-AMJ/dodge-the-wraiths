@@ -5,6 +5,7 @@ signal start_game
 @export var camera_shake_enabled = true
 @export var particles_enabled = true
 @export var vignette_enabled = true
+@export var text_fx_enabled = true
 @export var ui_delay_enabled = true
 @export var initial_delay_enabled = true
 @export var paused = false
@@ -25,6 +26,7 @@ func _ready() -> void:
 		if config.has("camera_shake_enabled"):  camera_shake_enabled = config["camera_shake_enabled"]
 		if config.has("particles_enabled"):     particles_enabled = config["particles_enabled"]
 		if config.has("vignette_enabled"):      vignette_enabled = config["vignette_enabled"]
+		if config.has("text_fx_enabled"):       text_fx_enabled = config["text_fx_enabled"]
 		if config.has("ui_delay_enabled"):      ui_delay_enabled = config["ui_delay_enabled"]
 		if config.has("initial_delay_enabled"): initial_delay_enabled = config["initial_delay_enabled"]
 
@@ -41,6 +43,7 @@ func _ready() -> void:
 	%OptionsMenu/CameraShake.button_pressed = camera_shake_enabled
 	%OptionsMenu/Particles.button_pressed = particles_enabled
 	%OptionsMenu/Vignette.button_pressed = vignette_enabled
+	%OptionsMenu/TextFX.button_pressed = text_fx_enabled
 	%OptionsMenu/UIDelay.button_pressed = ui_delay_enabled
 	%OptionsMenu/InitDelay.button_pressed = initial_delay_enabled
 
@@ -57,6 +60,7 @@ func quit() -> void:
 		"camera_shake_enabled": camera_shake_enabled,
 		"particles_enabled": particles_enabled,
 		"vignette_enabled": vignette_enabled,
+		"text_fx_enabled": text_fx_enabled,
 		"ui_delay_enabled": ui_delay_enabled,
 		"initial_delay_enabled": initial_delay_enabled,
 	})
@@ -192,3 +196,6 @@ func _on_game_ui_toggled(toggled_on: bool) -> void:
 
 func _on_init_delay_toggled(toggled_on: bool) -> void:
 	initial_delay_enabled = toggled_on
+
+func _on_text_fx_toggled(toggled_on: bool) -> void:
+	text_fx_enabled = toggled_on

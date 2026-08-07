@@ -28,6 +28,7 @@
 [ext_resource type="AudioStream" uid="uid://w2vk2crrv0y" path="res://music/root_of_all_evil.wav" id="25_2wyq8"]
 [ext_resource type="AudioStream" uid="uid://wxaapkx1pg4e" path="res://music/rough.wav" id="25_og1vs"]
 [ext_resource type="AudioStream" uid="uid://h6f6ctstrkw0" path="res://music/appartment.wav" id="27_vxglm"]
+[ext_resource type="AudioStream" uid="uid://b62v1kvtrx1eu" path="res://music/wicked.wav" id="27_yq6so"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_a8y0u"]
 particles_animation = true
@@ -165,6 +166,10 @@ stream = ExtResource("13_jbj1t")
 
 [node name="Root of All Evil" type="AudioStreamPlayer2D" parent="Music" unique_id=1592983051]
 stream = ExtResource("25_2wyq8")
+bus = &"Music"
+
+[node name="Wicked" type="AudioStreamPlayer2D" parent="Music" unique_id=1321618250]
+stream = ExtResource("27_yq6so")
 bus = &"Music"
 
 [node name="Rough" type="AudioStreamPlayer2D" parent="Music" unique_id=1361176704]

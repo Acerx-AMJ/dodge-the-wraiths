@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://b72j63o04bxn3"]
+
+[ext_resource type="Script" uid="uid://phvgthxiqxhd" path="res://scripts/text_fx.gd" id="1_nqh8r"]
+[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://fonts/slackey.ttf" id="2_0rmyn"]
+
+[node name="TextFX" type="Node" unique_id=1755615835]
+script = ExtResource("1_nqh8r")
+
+[node name="Label" type="Label" parent="." unique_id=2069272280]
+offset_right = 23.0
+offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("2_0rmyn")
+theme_override_font_sizes/font_size = 32
+text = "+1"

@@ -47,14 +47,15 @@ func _ready() -> void:
 # There must be a function 'NAME', sound effect in res://sounds/'NAME'.wav and sprite in res://art/'NAME'.png
 # Not the best way to handle it but it reduces boilerplate
 var powerup_types = [
-	["powerup_slow", func() -> void:
+	["powerup_slow", func(_powerup: Area2D) -> void:
 		is_slowed = true
 		slow_timer += 10.0],
-	["powerup_shield", func() -> void:
+	["powerup_shield", func(_powerup: Area2D) -> void:
 		$Player.powerup_shield()],
-	["powerup_score", func() -> void:
-		add_score(20)],
-	["powerup_clear", func() -> void:
+	["powerup_score", func(powerup: Area2D) -> void:
+		add_score(20)
+		spawn_text_fx(powerup.position, Color.YELLOW, 20)],
+	["powerup_clear", func(_powerup: Area2D) -> void:
 		add_score(get_tree().get_node_count_in_group("boss") * 10 + get_tree().get_node_count_in_group("non_boss") * 3)
 		$Camera2D.shake(15.0, 5.0)
 		$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
@@ -63,11 +64,17 @@ var powerup_types = [
 			var sprite = enemy.get_node("AnimatedSprite2D")
 			var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
 			spawn_death_particles(texture, enemy.position)
+
+			var is_boss = enemy.is_in_group("boss")
+			var color = Color.YELLOW if is_boss else Color.WHITE
+			var display_score = 10 if is_boss else 3
+			spawn_text_fx(enemy.position, color, display_score)
+
 			enemy.queue_free()],
-	["powerup_attack", func() -> void:
+	["powerup_attack", func(_powerup: Area2D) -> void:
 		$Player.powerup_attack()
 		attack_timer += 5.0],
-	["powerup_double", func() -> void:
+	["powerup_double", func(_powerup: Area2D) -> void:
 		is_score_doubled = true
 		double_timer += 10.0]]
 
@@ -150,6 +157,14 @@ func add_score(score_to_add: int) -> void:
 	score += score_to_add * 2 if is_score_doubled else score_to_add
 	$HUD.update_score(score)
 
+func spawn_text_fx(position: Vector2, color: Color, amount: int) -> void:
+	if not $HUD.text_fx_enabled: return
+	var text_fx = load("res://scenes/text_fx.tscn").instantiate()
+	text_fx.init(position, Vector2(randf_range(-100.0, 100.0), randf_range(-100.0, -10.0)), randf_range(0.6, 0.9), randf_range(0.3, 0.5))
+	text_fx.get_node("Label").modulate = color
+	text_fx.get_node("Label").text = str("+", amount * 2 if is_score_doubled else amount)
+	add_child(text_fx)
+
 func spawn_death_particles(texture: Texture, position: Vector2) -> void:
 	if not $HUD.particles_enabled: return
 	var particles: GPUParticles2D = $DeathParticles.duplicate()
@@ -202,13 +217,17 @@ func spawn_powerup() -> void:
 func _on_player_enemy_killed(enemy: Node2D, is_boss: bool) -> void:
 	var sounds = $KillSounds.get_children()
 	sounds[randi() % sounds.size()].play()
-	add_score(10 if is_boss else 3)
 	$Camera2D.shake(10.0, 7.5)
 	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
 
 	var sprite = enemy.get_node("AnimatedSprite2D")
 	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
 	spawn_death_particles(texture, enemy.position)
+
+	var score_to_add = 10 if is_boss else 3
+	var color = Color.YELLOW if is_boss else Color.WHITE
+	add_score(score_to_add)
+	spawn_text_fx(enemy.position, color, score_to_add)
 
 func _on_player_hit() -> void:
 	$Camera2D.shake(15.0, 5.0)

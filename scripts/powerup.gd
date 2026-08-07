@@ -8,7 +8,7 @@ func _process(delta: float) -> void:
 	scale = Vector2(scale_unit, scale_unit)
 
 func _on_area_entered(_area: Area2D) -> void:
-	function.call()
+	function.call(self)
 	$Sound.play()
 	$Sprite2D.hide()
 	$CollisionShape2D.set_deferred("disabled", true)
