@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cwovudvddrmw0" path="res://scenes/boss_homing.tscn" id="9_jscy8"]
 [ext_resource type="AudioStream" uid="uid://14olx1y602tt" path="res://sounds/kill.wav" id="10_trceg"]
 [ext_resource type="PackedScene" uid="uid://blcvc7lfdoopa" path="res://scenes/boss.tscn" id="10_y6deb"]
+[ext_resource type="PackedScene" uid="uid://ckgc37dgjsj43" path="res://scenes/boss_fish.tscn" id="11_2f3dj"]
 [ext_resource type="AudioStream" uid="uid://dl1oe7ijhi1s" path="res://sounds/kill2.wav" id="11_a8y0u"]
 [ext_resource type="AudioStream" uid="uid://cffd57k1jms2b" path="res://sounds/kill3.wav" id="12_jkv2x"]
 [ext_resource type="AudioStream" uid="uid://grpaqeqdktu7" path="res://sounds/kill4.wav" id="13_jbj1t"]
@@ -26,6 +27,7 @@
 [ext_resource type="AudioStream" uid="uid://d0gdoftvswu7h" path="res://sounds/powerup_spawn.wav" id="19_pm3ni"]
 [ext_resource type="AudioStream" uid="uid://w2vk2crrv0y" path="res://music/root_of_all_evil.wav" id="25_2wyq8"]
 [ext_resource type="AudioStream" uid="uid://wxaapkx1pg4e" path="res://music/rough.wav" id="25_og1vs"]
+[ext_resource type="AudioStream" uid="uid://h6f6ctstrkw0" path="res://music/appartment.wav" id="27_vxglm"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_a8y0u"]
 particles_animation = true
@@ -71,7 +73,7 @@ anim_offset_max = 1.0
 [node name="Main" type="Node" unique_id=504091427]
 script = ExtResource("1_h2yge")
 mob_scenes = Array[PackedScene]([ExtResource("2_5vw27"), ExtResource("3_kek77"), ExtResource("4_kek77"), ExtResource("5_choun"), ExtResource("6_dp3eg")])
-boss_scenes = Array[PackedScene]([ExtResource("7_0ld40"), ExtResource("8_gqmmt"), ExtResource("9_jscy8"), ExtResource("10_y6deb")])
+boss_scenes = Array[PackedScene]([ExtResource("7_0ld40"), ExtResource("8_gqmmt"), ExtResource("9_jscy8"), ExtResource("10_y6deb"), ExtResource("11_2f3dj")])
 powerup_scene = ExtResource("3_7mycd")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=398676798]
@@ -167,6 +169,10 @@ bus = &"Music"
 
 [node name="Rough" type="AudioStreamPlayer2D" parent="Music" unique_id=1361176704]
 stream = ExtResource("25_og1vs")
+bus = &"Music"
+
+[node name="Apartment" type="AudioStreamPlayer2D" parent="Music" unique_id=69644974]
+stream = ExtResource("27_vxglm")
 bus = &"Music"
 
 [connection signal="enemy_killed" from="Player" to="." method="_on_player_enemy_killed"]

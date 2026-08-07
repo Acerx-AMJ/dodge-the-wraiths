@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://ckgc37dgjsj43"]
+
+[ext_resource type="Script" uid="uid://bxr08lb2qmk23" path="res://scripts/boss_fish.gd" id="1_qnlv4"]
+[ext_resource type="Texture2D" uid="uid://duo22pe2uabb8" path="res://art/fish_large1.png" id="2_qnlv4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w01hu"]
+atlas = ExtResource("2_qnlv4")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lg3o7"]
+atlas = ExtResource("2_qnlv4")
+region = Rect2(129, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnlv4"]
+atlas = ExtResource("2_qnlv4")
+region = Rect2(0, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bmi7t"]
+atlas = ExtResource("2_qnlv4")
+region = Rect2(129, 129, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w01hu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lg3o7")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qnlv4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bmi7t")
+}],
+"loop": 1,
+"name": &"idle_eye",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lq8xf"]
+radius = 44.0
+height = 102.0
+
+[node name="BossFish" type="CharacterBody2D" unique_id=1233878181 groups=["boss", "mobs"]]
+scale = Vector2(1.25, 1.25)
+collision_mask = 0
+script = ExtResource("1_qnlv4")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"idle_eye"
+frame_progress = 0.072214805
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(12, 6)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_lq8xf")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-61, -39, 121, 94)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
