@@ -5,6 +5,9 @@ signal start_game
 @export var camera_shake_enabled = true
 @export var particles_enabled = true
 @export var vignette_enabled = true
+@export var ui_delay_enabled = true
+@export var initial_delay_enabled = true
+@export var paused = false
 
 var music_volume = 1
 var sfx_volume = 1
@@ -15,29 +18,33 @@ func _ready() -> void:
 	var file = FileAccess.open(savefile, FileAccess.READ)
 	if file:
 		var config = file.get_var()
-		if config.has("music_volume"):         music_volume = config["music_volume"]
-		if config.has("sfx_volume"):           sfx_volume = config["sfx_volume"]
-		if config.has("high_score"):           high_score = config["high_score"]
-		if config.has("total_score"):          total_score = config["total_score"]
-		if config.has("camera_shake_enabled"): camera_shake_enabled = config["camera_shake_enabled"]
-		if config.has("particles_enabled"):    particles_enabled = config["particles_enabled"]
-		if config.has("vignette_enabled"):     vignette_enabled = config["vignette_enabled"]
+		if config.has("music_volume"):          music_volume = config["music_volume"]
+		if config.has("sfx_volume"):            sfx_volume = config["sfx_volume"]
+		if config.has("high_score"):            high_score = config["high_score"]
+		if config.has("total_score"):           total_score = config["total_score"]
+		if config.has("camera_shake_enabled"):  camera_shake_enabled = config["camera_shake_enabled"]
+		if config.has("particles_enabled"):     particles_enabled = config["particles_enabled"]
+		if config.has("vignette_enabled"):      vignette_enabled = config["vignette_enabled"]
+		if config.has("ui_delay_enabled"):      ui_delay_enabled = config["ui_delay_enabled"]
+		if config.has("initial_delay_enabled"): initial_delay_enabled = config["initial_delay_enabled"]
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
-	$Options/MusicSlider.value = music_volume
-	$Options/MusicSlider/Label.text = str("Music: ", round(100 * music_volume), "%")
+	%OptionsMenu/MusicSlider.value = music_volume
+	%OptionsMenu/MusicSlider/Label.text = str("Music: ", round(100 * music_volume), "%")
 
 	var sfx_bus = AudioServer.get_bus_index("SFX")
 	AudioServer.set_bus_volume_linear(sfx_bus, sfx_volume)
-	$Options/SoundSlider.value = sfx_volume
-	$Options/SoundSlider/Label.text = str("SFX: ", round(100 * sfx_volume), "%")
+	%OptionsMenu/SoundSlider.value = sfx_volume
+	%OptionsMenu/SoundSlider/Label.text = str("SFX: ", round(100 * sfx_volume), "%")
 
-	$Options/CameraShake.button_pressed = camera_shake_enabled
-	$Options/Particles.button_pressed = particles_enabled
-	$Options/Vignette.button_pressed = vignette_enabled
+	%OptionsMenu/CameraShake.button_pressed = camera_shake_enabled
+	%OptionsMenu/Particles.button_pressed = particles_enabled
+	%OptionsMenu/Vignette.button_pressed = vignette_enabled
+	%OptionsMenu/UIDelay.button_pressed = ui_delay_enabled
+	%OptionsMenu/InitDelay.button_pressed = initial_delay_enabled
 
-	$ScoreLabel.text = str("HS: ", high_score)
+	%ScoreLabel.text = str("HS: ", high_score)
 	get_tree().set_auto_accept_quit(false)
 
 func quit() -> void:
@@ -50,6 +57,8 @@ func quit() -> void:
 		"camera_shake_enabled": camera_shake_enabled,
 		"particles_enabled": particles_enabled,
 		"vignette_enabled": vignette_enabled,
+		"ui_delay_enabled": ui_delay_enabled,
+		"initial_delay_enabled": initial_delay_enabled,
 	})
 	get_tree().quit()
 
@@ -65,64 +74,108 @@ func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: 
 		text = str(text, "SLOW ", round(slow_timer * 10.0) / 10.0, "\n")
 	if double_timer > 0.0:
 		text = str(text, "2X ", round(double_timer * 10.0) / 10.0, "\n")
-	$Powerups.text = text
+	%GameMenu/Powerups.text = text
 
 func show_message(text: String):
-	$Message.text = text
-	$Message.show()
-	$MessageTimer.start()
+	%Message.text = text
+	%Message.show()
+	%MessageTimer.start()
 
-func game_over():
-	$Powerups.hide()
-	show_message("Game Over!")
-	await $MessageTimer.timeout
+func stop_game(message: String):
+	if not ui_delay_enabled:
+		%GameMenu.hide()
+		%Message.text = "Dodge the Wraiths!"
+		%Message.show()
+		%MainMenu.show()
+		return
 
-	$ScoreLabel.text = str("HS: ", high_score)
-	$Message.text = "Dodge the Wraiths!"
-	$Message.show()
+	%GameMenu.hide()
+	show_message(message)
+	await %MessageTimer.timeout
+
+	%ScoreLabel.text = str("HS: ", high_score)
+	%Message.text = "Dodge the Wraiths!"
+	%Message.show()
 
 	await get_tree().create_timer(1.0).timeout
-	$MainMenu.show()
+	%MainMenu.show()
+
+func game_over():
+	stop_game("Game Over!")
 
 func update_score(score: int):
-	$ScoreLabel.text = str(score)
+	%ScoreLabel.text = str(score)
 	high_score = max(high_score, score)
 	total_score += score
 
 func _on_message_timer_timeout() -> void:
-	$Message.hide()
+	%Message.hide()
 
 func _on_start_button_pressed() -> void:
-	$MainMenu.hide()
-	$Powerups.show()
-	$ScoreLabel.text = "0"
+	%GameMenu.show()
+	%MainMenu.hide()
+	%ScoreLabel.text = "0"
 	start_game.emit()
 
 func _on_quit_button_pressed() -> void:
 	quit()
 
 func _on_options_button_pressed() -> void:
-	$MainMenu.hide()
-	$Message.hide()
-	$ScoreLabel.hide()
-	$Options.show()
+	%MainMenu.hide()
+	%Message.hide()
+	%ScoreLabel.hide()
+	%OptionsMenu.show()
 
 func _on_back_button_pressed() -> void:
-	$MainMenu.show()
-	$Message.show()
-	$ScoreLabel.show()
-	$Options.hide()
+	%ScoreLabel.show()
+	%OptionsMenu.hide()
+
+	if paused:
+		%PauseMenu.show()
+	else:
+		%MainMenu.show()
+		%Message.show()
+
+func _on_pause_button_pressed() -> void:
+	if not %Message.visible:
+		paused = true
+		Engine.time_scale = 0
+		%PauseMenu.show()
+		%GameMenu/PauseButton.hide()
+
+func _on_continue_button_pressed() -> void:
+	paused = false
+	Engine.time_scale = 1
+	%PauseMenu.hide()
+	%GameMenu/PauseButton.show()
+
+func _on_quit_button_pressed_paused() -> void:
+	paused = false
+	Engine.time_scale = 1
+	%PauseMenu.hide()
+	%GameMenu/PauseButton.show()
+
+	get_parent().quit_game()
+	stop_game("Forfeit!")
+
+func _on_options_button_pressed_paused() -> void:
+	%ScoreLabel.hide()
+	%PauseMenu.hide()
+	%OptionsMenu.show()
+
+func _on_skip_button_pressed() -> void:
+	get_parent().play_random_song()
 
 func _on_music_slider_value_changed(value: float) -> void:
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, value)
-	$Options/MusicSlider/Label.text = str("Music: ", round(100 * value), "%")
+	%OptionsMenu/MusicSlider/Label.text = str("Music: ", round(100 * value), "%")
 	music_volume = value
 
 func _on_sound_slider_value_changed(value: float) -> void:
 	var sfx_bus = AudioServer.get_bus_index("SFX")
 	AudioServer.set_bus_volume_linear(sfx_bus, value)
-	$Options/SoundSlider/Label.text = str("SFX: ", round(100 * value), "%")
+	%OptionsMenu/SoundSlider/Label.text = str("SFX: ", round(100 * value), "%")
 	sfx_volume = value
 
 func _on_camera_shake_toggled(toggled_on: bool) -> void:
@@ -133,3 +186,9 @@ func _on_particles_toggled(toggled_on: bool) -> void:
 
 func _on_vignette_toggled(toggled_on: bool) -> void:
 	vignette_enabled = toggled_on
+
+func _on_game_ui_toggled(toggled_on: bool) -> void:
+	ui_delay_enabled = toggled_on
+
+func _on_init_delay_toggled(toggled_on: bool) -> void:
+	initial_delay_enabled = toggled_on

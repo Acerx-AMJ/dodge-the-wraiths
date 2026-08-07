@@ -26,7 +26,9 @@ var score: int = 0
 var current_music: AudioStreamPlayer2D
 
 func play_random_song() -> void:
-	if current_music and current_music.playing: return
+	if current_music and current_music.playing:
+		current_music.stop()
+
 	var picked: AudioStreamPlayer2D = music_pool.pick_random()
 	while music_pool.size() > 1 and picked == current_music:
 		picked = music_pool.pick_random()
@@ -69,6 +71,12 @@ var powerup_types = [
 		is_score_doubled = true
 		double_timer += 10.0]]
 
+func quit_game():
+	$Player.toggle_visibility(false)
+	$Player/CollisionShape2D.disabled = true
+	start_timers = false
+	is_playing = false
+
 func game_over():
 	start_timers = false
 	is_playing = false
@@ -93,8 +101,12 @@ func new_game():
 
 	$Player.start($ViewportSize.size / 2)
 	$HUD.update_score(score)
-	$HUD.show_message("Get Ready...")
 
+	if not $HUD.initial_delay_enabled:
+		$HUD/Message.hide()
+		start_timers = true
+		return
+	$HUD.show_message("Get Ready...")
 	await get_tree().create_timer(2.0).timeout
 	start_timers = true
 

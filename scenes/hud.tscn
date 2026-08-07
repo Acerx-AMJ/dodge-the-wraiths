@@ -5,19 +5,21 @@
 [ext_resource type="Texture2D" uid="uid://byyd52kxhct65" path="res://art/home.png" id="3_047uy"]
 [ext_resource type="Texture2D" uid="uid://cbljxxp25d4wy" path="res://art/cogwheel.png" id="4_5pdws"]
 [ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://fonts/slackey.ttf" id="5_hd3ao"]
+[ext_resource type="Texture2D" uid="uid://dangrkshb151c" path="res://art/pause.png" id="6_5pdws"]
 [ext_resource type="Texture2D" uid="uid://b2nepdhuf38o4" path="res://art/back.png" id="6_047uy"]
+[ext_resource type="Texture2D" uid="uid://cfgd72vhwbqjx" path="res://art/skip.png" id="8_hd3ao"]
 
-[sub_resource type="InputEventAction" id="InputEventAction_lq8xf"]
+[sub_resource type="InputEventAction" id="InputEventAction_hd3ao"]
 action = &"start_game"
 
-[sub_resource type="Shortcut" id="Shortcut_kyu3p"]
-events = [SubResource("InputEventAction_lq8xf")]
+[sub_resource type="Shortcut" id="Shortcut_5pdws"]
+events = [SubResource("InputEventAction_hd3ao")]
 
-[sub_resource type="InputEventAction" id="InputEventAction_5pdws"]
+[sub_resource type="InputEventAction" id="InputEventAction_mphia"]
 action = &"quit_game"
 
 [sub_resource type="Shortcut" id="Shortcut_047uy"]
-events = [SubResource("InputEventAction_5pdws")]
+events = [SubResource("InputEventAction_mphia")]
 
 [sub_resource type="InputEventAction" id="InputEventAction_0i1j5"]
 action = &"quit_game"
@@ -25,14 +27,22 @@ action = &"quit_game"
 [sub_resource type="Shortcut" id="Shortcut_hd3ao"]
 events = [SubResource("InputEventAction_0i1j5")]
 
+[sub_resource type="InputEventAction" id="InputEventAction_5pdws"]
+action = &"quit_game"
+
+[sub_resource type="Shortcut" id="Shortcut_kyu3p"]
+events = [SubResource("InputEventAction_5pdws")]
+
 [node name="HUD" type="CanvasLayer" unique_id=1751554729]
 script = ExtResource("1_64ctp")
 
 [node name="MessageTimer" type="Timer" parent="." unique_id=1321241278]
+unique_name_in_owner = true
 wait_time = 2.0
 one_shot = true
 
 [node name="MainMenu" type="Control" parent="." unique_id=622445274]
+unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -48,12 +58,11 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -32.0
-offset_top = -32.0
 offset_right = 32.0
-offset_bottom = 32.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
-shortcut = SubResource("Shortcut_kyu3p")
+shortcut = SubResource("Shortcut_5pdws")
 texture_normal = ExtResource("2_uo2fv")
 
 [node name="QuitButton" type="TextureButton" parent="MainMenu" unique_id=1334780965]
@@ -64,9 +73,8 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = 96.0
-offset_top = -32.0
 offset_right = 160.0
-offset_bottom = 32.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 shortcut = SubResource("Shortcut_047uy")
@@ -80,14 +88,14 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -160.0
-offset_top = -32.0
 offset_right = -96.0
-offset_bottom = 32.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 texture_normal = ExtResource("4_5pdws")
 
-[node name="Options" type="Control" parent="." unique_id=197897863]
+[node name="GameMenu" type="Control" parent="." unique_id=881233755]
+unique_name_in_owner = true
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -96,7 +104,108 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MusicSlider" type="HSlider" parent="Options" unique_id=855198836]
+[node name="Powerups" type="Label" parent="GameMenu" unique_id=889209290]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -136.0
+offset_bottom = 78.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("5_hd3ao")
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 3
+
+[node name="PauseButton" type="TextureButton" parent="GameMenu" unique_id=1872145989]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 72.0
+offset_bottom = 72.0
+shortcut = SubResource("Shortcut_hd3ao")
+texture_normal = ExtResource("6_5pdws")
+
+[node name="PauseMenu" type="Control" parent="GameMenu" unique_id=1193300592]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContinueButton" type="TextureButton" parent="GameMenu/PauseMenu" unique_id=348278997]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_right = 32.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+shortcut = SubResource("Shortcut_kyu3p")
+texture_normal = ExtResource("2_uo2fv")
+
+[node name="QuitButton" type="TextureButton" parent="GameMenu/PauseMenu" unique_id=1837728640]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 96.0
+offset_right = 160.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("3_047uy")
+
+[node name="OptionsButton" type="TextureButton" parent="GameMenu/PauseMenu" unique_id=1508242096]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_right = -96.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("4_5pdws")
+
+[node name="Label" type="Label" parent="GameMenu/PauseMenu" unique_id=348632869]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -145.5
+offset_top = -109.0
+offset_right = 145.5
+offset_bottom = -19.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_hd3ao")
+theme_override_font_sizes/font_size = 64
+text = "Paused"
+
+[node name="OptionsMenu" type="Control" parent="." unique_id=197897863]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MusicSlider" type="HSlider" parent="OptionsMenu" unique_id=855198836]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -112,7 +221,7 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label" type="Label" parent="Options/MusicSlider" unique_id=1319737555]
+[node name="Label" type="Label" parent="OptionsMenu/MusicSlider" unique_id=1319737555]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -125,7 +234,7 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 32
 text = "Music: 100%"
 
-[node name="SoundSlider" type="HSlider" parent="Options" unique_id=792986310]
+[node name="SoundSlider" type="HSlider" parent="OptionsMenu" unique_id=792986310]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -142,7 +251,7 @@ max_value = 1.0
 step = 0.01
 value = 1.0
 
-[node name="Label" type="Label" parent="Options/SoundSlider" unique_id=483674403]
+[node name="Label" type="Label" parent="OptionsMenu/SoundSlider" unique_id=483674403]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -155,7 +264,7 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 32
 text = "SFX: 100%"
 
-[node name="CameraShake" type="CheckButton" parent="Options" unique_id=1650105176]
+[node name="CameraShake" type="CheckButton" parent="OptionsMenu" unique_id=1650105176]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -172,7 +281,7 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Camera Shake Enabled: "
 
-[node name="Particles" type="CheckButton" parent="Options" unique_id=1175512457]
+[node name="Particles" type="CheckButton" parent="OptionsMenu" unique_id=1175512457]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -189,7 +298,7 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Particles Enabled: "
 
-[node name="Vignette" type="CheckButton" parent="Options" unique_id=1439162180]
+[node name="Vignette" type="CheckButton" parent="OptionsMenu" unique_id=1439162180]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -206,14 +315,60 @@ theme_override_fonts/font = ExtResource("5_hd3ao")
 theme_override_font_sizes/font_size = 24
 text = "Vignette Enabled: "
 
-[node name="BackButton" type="TextureButton" parent="Options" unique_id=1475977328]
+[node name="UIDelay" type="CheckButton" parent="OptionsMenu" unique_id=650640596]
 layout_mode = 1
-offset_right = 64.0
-offset_bottom = 64.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -201.0
+offset_top = 118.5
+offset_right = 201.0
+offset_bottom = 161.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_hd3ao")
+theme_override_font_sizes/font_size = 24
+text = "UI Delay Enabled: "
+
+[node name="InitDelay" type="CheckButton" parent="OptionsMenu" unique_id=14263133]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -201.0
+offset_top = 166.5
+offset_right = 201.0
+offset_bottom = 209.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("5_hd3ao")
+theme_override_font_sizes/font_size = 24
+text = "Initial Delay Enabled: "
+
+[node name="BackButton" type="TextureButton" parent="OptionsMenu" unique_id=1475977328]
+layout_mode = 1
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 72.0
+offset_bottom = 72.0
 shortcut = SubResource("Shortcut_hd3ao")
 texture_normal = ExtResource("6_047uy")
 
+[node name="SkipButton" type="TextureButton" parent="OptionsMenu" unique_id=2033940532]
+layout_mode = 1
+offset_left = 80.0
+offset_top = 8.0
+offset_right = 144.0
+offset_bottom = 72.0
+tooltip_text = "Skip Song"
+texture_normal = ExtResource("8_hd3ao")
+
 [node name="ScoreLabel" type="Label" parent="." unique_id=1524536175]
+unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -226,14 +381,8 @@ theme_override_font_sizes/font_size = 64
 text = "0"
 horizontal_alignment = 1
 
-[node name="Powerups" type="Label" parent="." unique_id=889209290]
-visible = false
-offset_right = 136.0
-offset_bottom = 78.0
-theme_override_fonts/font = ExtResource("5_hd3ao")
-theme_override_font_sizes/font_size = 24
-
 [node name="Message" type="Label" parent="." unique_id=1462933766]
+unique_name_in_owner = true
 custom_maximum_size = Vector2(480, 240)
 anchors_preset = 8
 anchor_left = 0.5
@@ -241,9 +390,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -240.0
-offset_top = -280.0
+offset_top = -248.0
 offset_right = 240.0
-offset_bottom = -40.0
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("5_hd3ao")
@@ -257,9 +406,16 @@ autowrap_mode = 2
 [connection signal="pressed" from="MainMenu/StartButton" to="." method="_on_start_button_pressed"]
 [connection signal="pressed" from="MainMenu/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="MainMenu/OptionsButton" to="." method="_on_options_button_pressed"]
-[connection signal="value_changed" from="Options/MusicSlider" to="." method="_on_music_slider_value_changed"]
-[connection signal="value_changed" from="Options/SoundSlider" to="." method="_on_sound_slider_value_changed"]
-[connection signal="toggled" from="Options/CameraShake" to="." method="_on_camera_shake_toggled"]
-[connection signal="toggled" from="Options/Particles" to="." method="_on_particles_toggled"]
-[connection signal="toggled" from="Options/Vignette" to="." method="_on_vignette_toggled"]
-[connection signal="pressed" from="Options/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="GameMenu/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="GameMenu/PauseMenu/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="GameMenu/PauseMenu/QuitButton" to="." method="_on_quit_button_pressed_paused"]
+[connection signal="pressed" from="GameMenu/PauseMenu/OptionsButton" to="." method="_on_options_button_pressed_paused"]
+[connection signal="value_changed" from="OptionsMenu/MusicSlider" to="." method="_on_music_slider_value_changed"]
+[connection signal="value_changed" from="OptionsMenu/SoundSlider" to="." method="_on_sound_slider_value_changed"]
+[connection signal="toggled" from="OptionsMenu/CameraShake" to="." method="_on_camera_shake_toggled"]
+[connection signal="toggled" from="OptionsMenu/Particles" to="." method="_on_particles_toggled"]
+[connection signal="toggled" from="OptionsMenu/Vignette" to="." method="_on_vignette_toggled"]
+[connection signal="toggled" from="OptionsMenu/UIDelay" to="." method="_on_game_ui_toggled"]
+[connection signal="toggled" from="OptionsMenu/InitDelay" to="." method="_on_init_delay_toggled"]
+[connection signal="pressed" from="OptionsMenu/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="OptionsMenu/SkipButton" to="." method="_on_skip_button_pressed"]
