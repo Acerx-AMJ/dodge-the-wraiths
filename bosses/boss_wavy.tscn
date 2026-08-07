@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://b2cxtrivemr7r"]
+
+[ext_resource type="Script" uid="uid://c2s3wovni8yj" path="res://bosses/boss_wavy.gd" id="1_yu383"]
+[ext_resource type="Texture2D" uid="uid://dugljgjd4o4p4" path="res://assets/sprites/demon_large1.png" id="2_kdxhb"]
+[ext_resource type="PackedScene" uid="uid://c8imul6yqqag2" path="res://enemies/mob_wavy.tscn" id="2_t4pgt"]
+[ext_resource type="AudioStream" uid="uid://dse2g1vlyf6ur" path="res://assets/sounds/spawn.wav" id="4_t4pgt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t4pgt"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_20pcd"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(129, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yu383"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(0, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdxhb"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(129, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_42trs"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(0, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8khm"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(129, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fuobd"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(0, 387, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_waqlr"]
+atlas = ExtResource("2_kdxhb")
+region = Rect2(129, 387, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t4pgt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_20pcd")
+}],
+"loop": 1,
+"name": &"demon1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yu383")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdxhb")
+}],
+"loop": 1,
+"name": &"demon2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_42trs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8khm")
+}],
+"loop": 1,
+"name": &"demon3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fuobd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_waqlr")
+}],
+"loop": 1,
+"name": &"demon4",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbgio"]
+radius = 63.0
+
+[node name="BossWavy" type="CharacterBody2D" unique_id=1233878181 groups=["boss", "mobs"]]
+collision_mask = 0
+script = ExtResource("1_yu383")
+demon_scene = ExtResource("2_t4pgt")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"demon1"
+frame_progress = 0.29167366
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(4, 0)
+rotation = 1.5707964
+shape = SubResource("CircleShape2D_pbgio")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-51, -64, 106, 128)
+
+[node name="SummonSound" type="AudioStreamPlayer2D" parent="." unique_id=1039115044]
+stream = ExtResource("4_t4pgt")
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

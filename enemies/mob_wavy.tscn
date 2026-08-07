@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://c8imul6yqqag2"]
+
+[ext_resource type="Script" uid="uid://bek0r46wweoaf" path="res://enemies/mob_wavy.gd" id="1_rtxay"]
+[ext_resource type="Texture2D" uid="uid://dqh058oghcg8p" path="res://assets/sprites/demon1.png" id="2_rtxay"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvii4"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4nkwa"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(65, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t1157"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(0, 65, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_washt"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(65, 65, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wx1si"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(0, 130, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yeea1"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(65, 130, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_42ue0"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(0, 195, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7hl3h"]
+atlas = ExtResource("2_rtxay")
+region = Rect2(65, 195, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mvii4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4nkwa")
+}],
+"loop": 1,
+"name": &"demon1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t1157")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_washt")
+}],
+"loop": 1,
+"name": &"demon2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wx1si")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yeea1")
+}],
+"loop": 1,
+"name": &"demon3",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_42ue0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7hl3h")
+}],
+"loop": 1,
+"name": &"demon4",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbgio"]
+radius = 28.01785
+
+[node name="MobWavy" type="CharacterBody2D" unique_id=1233878181 groups=["mobs", "non_boss"]]
+collision_mask = 0
+script = ExtResource("1_rtxay")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"demon4"
+frame_progress = 0.75040245
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(4, 0)
+rotation = 1.5707964
+shape = SubResource("CircleShape2D_pbgio")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-23, -26, 53, 55)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

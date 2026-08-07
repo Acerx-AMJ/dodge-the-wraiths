@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cqt4t1hvcvmri"]
 
-[ext_resource type="Script" uid="uid://cud646txlx1kx" path="res://scripts/player.gd" id="1_sweqy"]
-[ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://art/powerup_shield.png" id="2_2hs0m"]
-[ext_resource type="Texture2D" uid="uid://dafo7rgqm434a" path="res://art/powerup_attack.png" id="3_1jxqw"]
-[ext_resource type="Texture2D" uid="uid://c3m0k2lsby1dd" path="res://art/icon1.png" id="4_dqkch"]
+[ext_resource type="Script" uid="uid://cud646txlx1kx" path="res://scenes/player.gd" id="1_sweqy"]
+[ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://assets/sprites/powerup_shield.png" id="2_2hs0m"]
+[ext_resource type="Texture2D" uid="uid://dafo7rgqm434a" path="res://assets/sprites/powerup_attack.png" id="3_1jxqw"]
+[ext_resource type="Texture2D" uid="uid://c3m0k2lsby1dd" path="res://assets/sprites/icon1.png" id="4_dqkch"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kyu3p"]
 size = Vector2(19.199999, 19.199999)

@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b72j63o04bxn3"]
 
-[ext_resource type="Script" uid="uid://phvgthxiqxhd" path="res://scripts/text_fx.gd" id="1_nqh8r"]
-[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://fonts/slackey.ttf" id="2_0rmyn"]
+[ext_resource type="Script" uid="uid://phvgthxiqxhd" path="res://scenes/text_fx.gd" id="1_nqh8r"]
+[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://assets/fonts/slackey.ttf" id="2_0rmyn"]
 
 [node name="TextFX" type="Node" unique_id=1755615835]
 script = ExtResource("1_nqh8r")

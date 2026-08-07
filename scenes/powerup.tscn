@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cu7i2cda0pbst"]
 
-[ext_resource type="Script" uid="uid://bfooumwi35bji" path="res://scripts/powerup.gd" id="1_wh0le"]
-[ext_resource type="Texture2D" uid="uid://qi17evkuidwo" path="res://art/powerup_slow.png" id="2_6cuax"]
-[ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://art/powerup_shield.png" id="3_6cuax"]
-[ext_resource type="AudioStream" uid="uid://dn4c0nbw5hwcv" path="res://sounds/powerup_score.wav" id="4_pufsy"]
+[ext_resource type="Script" uid="uid://bfooumwi35bji" path="res://scenes/powerup.gd" id="1_wh0le"]
+[ext_resource type="Texture2D" uid="uid://qi17evkuidwo" path="res://assets/sprites/powerup_slow.png" id="2_6cuax"]
+[ext_resource type="Texture2D" uid="uid://dtxwdvac48xs8" path="res://assets/sprites/powerup_shield.png" id="3_6cuax"]
+[ext_resource type="AudioStream" uid="uid://dn4c0nbw5hwcv" path="res://assets/sounds/powerup_score.wav" id="4_pufsy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kyu3p"]
 radius = 39.0

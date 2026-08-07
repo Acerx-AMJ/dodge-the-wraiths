@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://blcvc7lfdoopa"]
+
+[ext_resource type="Script" uid="uid://dialv27j0memb" path="res://bosses/boss.gd" id="1_neq0i"]
+[ext_resource type="Texture2D" uid="uid://bjatxhhml3eoy" path="res://assets/sprites/eye_large2.png" id="2_neq0i"]
+[ext_resource type="PackedScene" uid="uid://beje2p3qswo04" path="res://enemies/mob.tscn" id="2_qnbj4"]
+[ext_resource type="PackedScene" uid="uid://dqy8noymwih0l" path="res://enemies/mob_homing.tscn" id="3_r3bxh"]
+[ext_resource type="AudioStream" uid="uid://4oiftmam4b7o" path="res://assets/sounds/spawn_servant.wav" id="5_r3bxh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jncid"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnbj4"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(129, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3bxh"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(0, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqpjq"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(129, 258, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2cdgk"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(0, 129, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsl3t"]
+atlas = ExtResource("2_neq0i")
+region = Rect2(129, 129, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kyu3p"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jncid")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qnbj4")
+}],
+"loop": 1,
+"name": &"blue",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r3bxh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqpjq")
+}],
+"loop": 1,
+"name": &"brown",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2cdgk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qsl3t")
+}],
+"loop": 1,
+"name": &"green",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pbgio"]
+radius = 53.037724
+
+[node name="Boss" type="CharacterBody2D" unique_id=1233878181 groups=["boss", "mobs"]]
+collision_mask = 0
+script = ExtResource("1_neq0i")
+servant_scenes = Array[PackedScene]([ExtResource("2_qnbj4"), ExtResource("3_r3bxh")])
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
+scale = Vector2(1.25, 1.25)
+sprite_frames = SubResource("SpriteFrames_kyu3p")
+animation = &"brown"
+frame_progress = 0.057878304
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
+position = Vector2(27, 0)
+rotation = 1.5707964
+shape = SubResource("CircleShape2D_pbgio")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
+rect = Rect2(-77, -57, 157, 120)
+
+[node name="SummonSound" type="AudioStreamPlayer2D" parent="." unique_id=1339319146]
+stream = ExtResource("5_r3bxh")
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dwr0vx3lc1sxo"]
 
-[ext_resource type="Script" uid="uid://n8e6iv7236yb" path="res://scripts/hud.gd" id="1_64ctp"]
-[ext_resource type="Texture2D" uid="uid://nqngigr3202h" path="res://art/play.png" id="2_uo2fv"]
-[ext_resource type="Texture2D" uid="uid://byyd52kxhct65" path="res://art/home.png" id="3_047uy"]
-[ext_resource type="Texture2D" uid="uid://cbljxxp25d4wy" path="res://art/cogwheel.png" id="4_5pdws"]
-[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://fonts/slackey.ttf" id="5_hd3ao"]
-[ext_resource type="Texture2D" uid="uid://dangrkshb151c" path="res://art/pause.png" id="6_5pdws"]
-[ext_resource type="Texture2D" uid="uid://b2nepdhuf38o4" path="res://art/back.png" id="6_047uy"]
-[ext_resource type="Texture2D" uid="uid://cfgd72vhwbqjx" path="res://art/skip.png" id="8_hd3ao"]
+[ext_resource type="Script" uid="uid://n8e6iv7236yb" path="res://scenes/hud.gd" id="1_64ctp"]
+[ext_resource type="Texture2D" uid="uid://nqngigr3202h" path="res://assets/sprites/play.png" id="2_uo2fv"]
+[ext_resource type="Texture2D" uid="uid://byyd52kxhct65" path="res://assets/sprites/home.png" id="3_047uy"]
+[ext_resource type="Texture2D" uid="uid://cbljxxp25d4wy" path="res://assets/sprites/cogwheel.png" id="4_5pdws"]
+[ext_resource type="FontFile" uid="uid://b7y6yu8e7l87i" path="res://assets/fonts/slackey.ttf" id="5_hd3ao"]
+[ext_resource type="Texture2D" uid="uid://dangrkshb151c" path="res://assets/sprites/pause.png" id="6_5pdws"]
+[ext_resource type="Texture2D" uid="uid://b2nepdhuf38o4" path="res://assets/sprites/back.png" id="6_047uy"]
+[ext_resource type="Texture2D" uid="uid://cfgd72vhwbqjx" path="res://assets/sprites/skip.png" id="8_hd3ao"]
 
 [sub_resource type="InputEventAction" id="InputEventAction_hd3ao"]
 action = &"start_game"
