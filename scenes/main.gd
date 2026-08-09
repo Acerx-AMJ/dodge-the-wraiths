@@ -5,24 +5,34 @@ extends Node
 
 @export var mob_spawn_speed: float = 0.5
 @export var boss_spawn_speed: float = 12.0
+@export var boss_game_mode_spawn_speed: float = 2.0
 @export var powerup_spawn_speed: float = 7.5
 @export var score_speed: float = 1.0
+@export var party_modifier_speed: float = 3.0
 
 var mob_timer: float = mob_spawn_speed
 var boss_timer: float = boss_spawn_speed
 var powerup_timer: float = powerup_spawn_speed
 var score_timer: float = score_speed
-var attack_timer: float = 0
-var slow_timer: float = 0
-var double_timer: float = 0
+var party_modifier_timer: float = party_modifier_speed
+var attack_timer: float = 0.0
+var slow_timer: float = 0.0
+var double_timer: float = 0.0
+var powerup_increased_rate_timer: float = 0.0
+
+var can_spawn_mobs: bool = true
+var can_spawn_bosses: bool = true
+var can_spawn_powerups: bool = true
 
 var start_timers: bool = false
 var is_playing: bool = false
 var is_slowed: bool = false
+var is_powerup_rate_increased: bool = false
 var is_score_doubled: bool = false
+var current_game_mode: GameMode.GameMode
 var score: int = 0
 
-@onready var music_pool: Array[Node]
+var music_pool: Array[Node]
 var current_music: AudioStreamPlayer2D
 
 func play_random_song() -> void:
@@ -79,7 +89,52 @@ var powerup_types = [
 		is_score_doubled = true
 		double_timer += 10.0]]
 
+var party_modifiers: Array[Callable] = [
+	func() -> void:
+		$HUD.display_modifier("+Powerups")
+		var powerup_count = randi_range(1, 4)
+		for i in range(powerup_count):
+			spawn_powerup(),
+	func() -> void:
+		$HUD.display_modifier("Powerup Exchange")
+		var powerup_reward = randi_range(15, 30)
+		add_score(get_tree().get_node_count_in_group("powerups") * powerup_reward)
+		$Vignette.apply(Color.YELLOW, 1.0, 1.5)
+
+		for powerup in get_tree().get_nodes_in_group("powerups"):
+			spawn_text_fx(powerup.position, Color.YELLOW, powerup_reward)
+			powerup.queue_free(),
+	func() -> void:
+		$HUD.display_modifier("Random Powerup")
+		powerup_types.pick_random()[1].call($Player),
+	func() -> void:
+		$HUD.display_modifier("+Powerup Rate")
+		is_powerup_rate_increased = true
+		powerup_increased_rate_timer += 10.0,
+	func() -> void:
+		$HUD.display_modifier("+Enemies")
+		var enemy_count = randi_range(3, 7)
+		for i in range(enemy_count):
+			spawn_mob(),
+	func() -> void:
+		$HUD.display_modifier("-Enemies")
+		var enemy_count = randi_range(2, 5)
+		while get_tree().get_node_count_in_group("mobs") > 0 and enemy_count > 0:
+			var enemy = get_tree().get_nodes_in_group("mobs").pick_random()
+			var sprite = enemy.get_node("AnimatedSprite2D")
+			var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+			spawn_death_particles(texture, enemy.position)
+
+			var is_boss = enemy.is_in_group("boss")
+			var color = Color.YELLOW if is_boss else Color.WHITE
+			var display_score = 10 if is_boss else 3
+			spawn_text_fx(enemy.position, color, display_score)
+			add_score(display_score)
+			enemy.queue_free()
+			enemy_count -= 1]
+
 func quit_game():
+	$Player.invincible = false
 	$Player.toggle_visibility(false)
 	$Player/CollisionShape2D.disabled = true
 	start_timers = false
@@ -91,31 +146,43 @@ func game_over():
 	$HUD.game_over()
 	$DeathSound.play()
 
-func new_game():
+func new_game(game_mode: GameMode.GameMode):
 	is_playing = true
 	is_slowed = false
 	is_score_doubled = false
+	is_powerup_rate_increased = false
 	score = 0
 	attack_timer = 0.0
 	slow_timer = 0.0
 	double_timer = 0.0
+	powerup_increased_rate_timer = 0.0
 	score_timer = score_speed
 	powerup_timer = powerup_spawn_speed
 	mob_timer = mob_spawn_speed
 	boss_timer = boss_spawn_speed
+	party_modifier_timer = party_modifier_speed
+	current_game_mode = game_mode
+
+	can_spawn_mobs = (game_mode != GameMode.GameMode.BOSS)
+	can_spawn_bosses = true
+	can_spawn_powerups = (game_mode != GameMode.GameMode.NO_POWERUPS)
 
 	get_tree().call_group("mobs", "queue_free")
 	get_tree().call_group("powerups", "queue_free")
+
+	if game_mode == GameMode.GameMode.BOSS:
+		boss_timer = boss_game_mode_spawn_speed
+	elif game_mode == GameMode.GameMode.PARTY:
+		party_modifiers.pick_random().call()
 
 	$Player.start($ViewportSize.size / 2)
 	$HUD.update_score(score)
 
 	if not $HUD.initial_delay_enabled:
 		$HUD/Message.hide()
-		start_timers = true
-		return
-	$HUD.show_message("Get Ready...")
-	await get_tree().create_timer(2.0).timeout
+	else:
+		$HUD.show_message("Get Ready...")
+		await get_tree().create_timer(2.0).timeout
 	start_timers = true
 
 func _process(delta: float) -> void:
@@ -132,27 +199,36 @@ func _process(delta: float) -> void:
 		double_timer = max(0.0, double_timer - delta)
 		if double_timer == 0.0:
 			is_score_doubled = false
-	$HUD.display_powerup_info(attack_timer, slow_timer, double_timer)
+	if powerup_increased_rate_timer > 0.0:
+		powerup_increased_rate_timer = max(0.0, powerup_increased_rate_timer - delta)
+		if powerup_increased_rate_timer == 0.0:
+			is_powerup_rate_increased = false
+	$HUD.display_powerup_info(attack_timer, slow_timer, double_timer, powerup_increased_rate_timer)
 
 	if not start_timers: return
 	var slowed = delta / 3.0 if is_slowed else delta
 	mob_timer -= slowed
 	boss_timer -= slowed
-	powerup_timer -= delta
+	powerup_timer -= delta * 3.0 if is_powerup_rate_increased else delta
 	score_timer -= delta
+	party_modifier_timer -= delta
 
-	if mob_timer <= 0.0:
+	if mob_timer <= 0.0 and can_spawn_mobs:
 		spawn_mob()
 		mob_timer += mob_spawn_speed * randf_range(0.8, 1.2)
-	if boss_timer <= 0.0:
+	if boss_timer <= 0.0 and can_spawn_bosses:
 		spawn_boss()
-		boss_timer += boss_spawn_speed * randf_range(0.8, 1.2)
-	if powerup_timer <= 0.0:
+		var spawn_speed = boss_game_mode_spawn_speed if current_game_mode == GameMode.GameMode.BOSS else boss_spawn_speed
+		boss_timer += spawn_speed * randf_range(0.8, 1.2)
+	if powerup_timer <= 0.0 and can_spawn_powerups:
 		spawn_powerup()
 		powerup_timer += powerup_spawn_speed * randf_range(0.8, 1.2)
 	if score_timer <= 0.0:
 		add_score(1)
 		score_timer += score_speed
+	if party_modifier_timer <= 0.0 and current_game_mode == GameMode.GameMode.PARTY:
+		party_modifiers.pick_random().call()
+		party_modifier_timer += party_modifier_speed * randf_range(0.8, 1.2)
 
 func add_score(score_to_add: int) -> void:
 	score += score_to_add * 2 if is_score_doubled else score_to_add
@@ -247,5 +323,5 @@ func _on_player_hit() -> void:
 	spawn_death_particles($Player/Sprite.texture, $Player.position)
 	game_over()
 
-func _on_hud_start_game() -> void:
-	new_game()
+func _on_hud_start_game(game_mode: GameMode.GameMode) -> void:
+	new_game(game_mode)

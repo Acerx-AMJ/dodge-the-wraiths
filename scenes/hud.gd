@@ -1,6 +1,21 @@
 extends CanvasLayer
 signal start_game
 
+var GAME_MODE_TOOLTIPS: Dictionary[GameMode.GameMode, String] = {
+	GameMode.GameMode.NORMAL: "Normal",
+	GameMode.GameMode.BOSS: "Boss",
+	GameMode.GameMode.PARTY: "Random Modifiers",
+	GameMode.GameMode.NO_POWERUPS: "No Powerups",
+}
+
+var GAME_MODE_ICONS: Dictionary[GameMode.GameMode, Texture] = {
+	GameMode.GameMode.NORMAL: preload("res://assets/sprites/normal_gm.png"),
+	GameMode.GameMode.BOSS: preload("res://assets/sprites/boss_gm.png"),
+	GameMode.GameMode.PARTY: preload("res://assets/sprites/party_gm.png"),
+	GameMode.GameMode.NO_POWERUPS: preload("res://assets/sprites/no_powerup_gm.png"),
+}
+
+@export var game_mode: GameMode.GameMode = GameMode.GameMode.NORMAL
 @export var savefile = "user://save_game.dat"
 @export var camera_shake_enabled = true
 @export var particles_enabled = true
@@ -31,6 +46,7 @@ func _ready() -> void:
 		if config.has("text_fx_enabled"):       text_fx_enabled = config["text_fx_enabled"]
 		if config.has("ui_delay_enabled"):      ui_delay_enabled = config["ui_delay_enabled"]
 		if config.has("initial_delay_enabled"): initial_delay_enabled = config["initial_delay_enabled"]
+		if config.has("game_mode"):             game_mode = config["game_mode"]
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
@@ -50,6 +66,9 @@ func _ready() -> void:
 	%OptionsMenu/UIDelay.button_pressed = ui_delay_enabled
 	%OptionsMenu/InitDelay.button_pressed = initial_delay_enabled
 
+	%MainMenu/GameModeButton.texture_normal = GAME_MODE_ICONS[game_mode]
+	%MainMenu/GameModeButton.tooltip_text = GAME_MODE_TOOLTIPS[game_mode]
+
 	%ScoreLabel.text = str("HS: ", high_score)
 	get_tree().set_auto_accept_quit(false)
 
@@ -67,6 +86,7 @@ func quit() -> void:
 		"text_fx_enabled": text_fx_enabled,
 		"ui_delay_enabled": ui_delay_enabled,
 		"initial_delay_enabled": initial_delay_enabled,
+		"game_mode": game_mode,
 	})
 	get_tree().quit()
 
@@ -74,15 +94,29 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
-func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: float) -> void:
+func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: float, powerup_increased_rate_timer: float) -> void:
 	var text = ""
 	if attack_timer > 0.0:
 		text = str(text, "ATK ", round(attack_timer * 10.0) / 10.0, "\n")
 	if slow_timer > 0.0:
 		text = str(text, "SLOW ", round(slow_timer * 10.0) / 10.0, "\n")
 	if double_timer > 0.0:
-		text = str(text, "2X ", round(double_timer * 10.0) / 10.0, "\n")
+		text = str(text, "2X SCORE ", round(double_timer * 10.0) / 10.0, "\n")
+	if powerup_increased_rate_timer > 0.0:
+		text = str(text, "+POW UPS ", round(powerup_increased_rate_timer * 10.0) / 10.0, "\n")
 	%GameMenu/Powerups.text = text
+
+var modifier_tween
+func display_modifier(text: String):
+	$PartySound.play()
+	%PartyModifier.text = text
+	%PartyModifier.modulate.a = 1.0
+	if modifier_tween:
+		modifier_tween.kill()
+
+	await get_tree().create_timer(1.5).timeout
+	modifier_tween = get_tree().create_tween()
+	modifier_tween.tween_property(%PartyModifier, "modulate:a", 0.0, 0.5)
 
 func show_message(text: String):
 	%Message.text = text
@@ -123,7 +157,7 @@ func _on_start_button_pressed() -> void:
 	%GameMenu.show()
 	%MainMenu.hide()
 	%ScoreLabel.text = "0"
-	start_game.emit()
+	start_game.emit(game_mode)
 
 func _on_quit_button_pressed() -> void:
 	quit()
@@ -173,6 +207,15 @@ func _on_options_button_pressed_paused() -> void:
 
 func _on_skip_button_pressed() -> void:
 	get_parent().play_random_song()
+
+func _on_game_mode_button_pressed() -> void:
+	match game_mode:
+		GameMode.GameMode.NORMAL:      game_mode = GameMode.GameMode.BOSS
+		GameMode.GameMode.BOSS:        game_mode = GameMode.GameMode.PARTY
+		GameMode.GameMode.PARTY:       game_mode = GameMode.GameMode.NO_POWERUPS
+		GameMode.GameMode.NO_POWERUPS: game_mode = GameMode.GameMode.NORMAL
+	%MainMenu/GameModeButton.texture_normal = GAME_MODE_ICONS[game_mode]
+	%MainMenu/GameModeButton.tooltip_text = GAME_MODE_TOOLTIPS[game_mode]
 
 func _on_music_slider_value_changed(value: float) -> void:
 	var music_bus = AudioServer.get_bus_index("Music")
