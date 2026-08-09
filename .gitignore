@@ -3,5 +3,6 @@
 /android/
 
 *.exe
+*.x86_64
 *.pck
 export_presets.cfg

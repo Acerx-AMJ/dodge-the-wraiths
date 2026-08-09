@@ -24,6 +24,7 @@ var GAME_MODE_ICONS: Dictionary[GameMode.GameMode, Texture] = {
 @export var text_fx_enabled = true
 @export var ui_delay_enabled = true
 @export var initial_delay_enabled = true
+@export var fullscreen = false
 @export var paused = false
 
 var music_volume = 1
@@ -47,6 +48,7 @@ func _ready() -> void:
 		if config.has("ui_delay_enabled"):      ui_delay_enabled = config["ui_delay_enabled"]
 		if config.has("initial_delay_enabled"): initial_delay_enabled = config["initial_delay_enabled"]
 		if config.has("game_mode"):             game_mode = config["game_mode"]
+		if config.has("fullscreen"):            fullscreen = config["fullscreen"]
 
 	var music_bus = AudioServer.get_bus_index("Music")
 	AudioServer.set_bus_volume_linear(music_bus, music_volume)
@@ -71,6 +73,7 @@ func _ready() -> void:
 
 	%ScoreLabel.text = str("HS: ", high_score)
 	get_tree().set_auto_accept_quit(false)
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
 func quit() -> void:
 	var file = FileAccess.open(savefile, FileAccess.WRITE)
@@ -87,6 +90,7 @@ func quit() -> void:
 		"ui_delay_enabled": ui_delay_enabled,
 		"initial_delay_enabled": initial_delay_enabled,
 		"game_mode": game_mode,
+		"fullscreen": fullscreen,
 	})
 	get_tree().quit()
 
@@ -255,3 +259,7 @@ func _on_game_ui_toggled(toggled_on: bool) -> void:
 
 func _on_init_delay_toggled(toggled_on: bool) -> void:
 	initial_delay_enabled = toggled_on
+
+func _on_full_screen_toggled(toggled_on: bool) -> void:
+	fullscreen = toggled_on
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
