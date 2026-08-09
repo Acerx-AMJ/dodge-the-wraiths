@@ -94,16 +94,22 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		quit()
 
-func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: float, powerup_increased_rate_timer: float) -> void:
+func display_powerup_info(attack_timer: float, slow_timer: float, double_timer: float, powerup_increased_rate_timer: float, bouncy_timer: float, slippery_timer: float, confused_timer: float) -> void:
 	var text = ""
 	if attack_timer > 0.0:
 		text = str(text, "ATK ", round(attack_timer * 10.0) / 10.0, "\n")
 	if slow_timer > 0.0:
 		text = str(text, "SLOW ", round(slow_timer * 10.0) / 10.0, "\n")
 	if double_timer > 0.0:
-		text = str(text, "2X SCORE ", round(double_timer * 10.0) / 10.0, "\n")
+		text = str(text, "2X ", round(double_timer * 10.0) / 10.0, "\n")
 	if powerup_increased_rate_timer > 0.0:
-		text = str(text, "+POW UPS ", round(powerup_increased_rate_timer * 10.0) / 10.0, "\n")
+		text = str(text, "+POW ", round(powerup_increased_rate_timer * 10.0) / 10.0, "\n")
+	if bouncy_timer > 0.0:
+		text = str(text, "BOUNCY ", round(bouncy_timer * 10.0) / 10.0, "\n")
+	if slippery_timer > 0.0:
+		text = str(text, "SLIP ", round(slippery_timer * 10.0) / 10.0, "\n")
+	if confused_timer > 0.0:
+		text = str(text, "CONF ", round(confused_timer * 10.0) / 10.0, "\n")
 	%GameMenu/Powerups.text = text
 
 var modifier_tween

@@ -6,10 +6,14 @@ signal enemy_killed
 @export var acceleration: float = 2500.0
 @export var deceleration: float = 4000.0
 @export var invincibility_duration: float = 1.5
+@export var bounce_coefficient: float = 2.0
 
 var invincible: bool = false
 var shielded: bool = false
 var attack_mode: bool = false
+var slippery: bool = false
+var bouncy: bool = false
+var confused: bool = false
 var invincibility_timer: float = invincibility_duration
 var velocity: Vector2 = Vector2.ZERO
 
@@ -49,6 +53,10 @@ func start(pos: Vector2) -> void:
 	powerup_attack_stop()
 	$CollisionShape2D.disabled = false
 	invincible = false
+	slippery = false
+	bouncy = false
+	confused = false
+	velocity = Vector2()
 	invincibility_timer = invincibility_duration
 
 func _ready() -> void:
@@ -65,12 +73,19 @@ func _ready() -> void:
 		shadows.push_back(shadow)
 
 func _process(delta: float) -> void:
-	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var raw_direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var direction = -raw_direction if confused else raw_direction
 	var vel = direction.normalized() * speed
-	var rate = acceleration if (direction.x != 0.0 || direction.y != 0.0) else deceleration
+	var raw_rate = acceleration if (direction.x != 0.0 || direction.y != 0.0) else deceleration
+	var rate = raw_rate / 5.0 if slippery else raw_rate
 	velocity = velocity.move_toward(vel, rate * delta)
 
 	position += velocity * delta
+	if bouncy and (position.y < 0.0 or position.y > get_viewport_rect().size.y):
+		velocity.y *= -bounce_coefficient
+	if bouncy and (position.x < 0.0 or position.x > get_viewport_rect().size.x):
+		velocity.x *= -bounce_coefficient
+
 	position = position.clamp(Vector2.ZERO, get_viewport_rect().size)
 
 	if global_position.distance_squared_to(shadows.back().global_position) > 1.0:
@@ -90,6 +105,9 @@ func _on_body_entered(body: Node2D) -> void:
 	if invincible and not attack_mode: return # Avoid using shield when invincible
 
 	if attack_mode or shielded:
+		if bouncy:
+			velocity *= position.direction_to(body.position) * -bounce_coefficient
+
 		enemy_killed.emit(body, body.is_in_group("boss"))
 		body.queue_free()
 		if not attack_mode and shielded:

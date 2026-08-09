@@ -43,14 +43,15 @@ func _process(delta: float) -> void:
 		var t = min(jump_timer / jump_length, 1.0)
 		var y = 4.0 * t * (1.0 - t)
 		position.y += y * jump_height
-		scale.y = 1.0 + y * 0.5
-		scale.x = 1.0 + max(0.0, cos(t * TAU) / 2)
+		$AnimatedSprite2D.scale.y = 1.0 + y * 0.5
+		$AnimatedSprite2D.scale.x = 1.0 + max(0.0, cos(t * TAU) / 2)
 	else:
-		scale.x = min(scale.x + delta * 3.0, 1.0) if scale.x < 1.0 else max(scale.x - delta * 3.0, 1.0)
+		$AnimatedSprite2D.scale.x = min($AnimatedSprite2D.scale.x + delta * 3.0, 1.0) if $AnimatedSprite2D.scale.x < 1.0 else max($AnimatedSprite2D.scale.x - delta * 3.0, 1.0)
 		delay_timer += delta
 		if delay_timer >= delay_length:
 			jump()
 
+	$Shadow.scale = $AnimatedSprite2D.scale
 	$Shadow.visible = jumping
 	$CollisionShape2D.disabled = jumping
 	$AnimatedSprite2D.speed_scale = not jumping

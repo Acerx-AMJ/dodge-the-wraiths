@@ -85,10 +85,11 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lq8xf"]
-radius = 69.0
-height = 166.0
+radius = 46.0
+height = 116.0
 
 [node name="MobSlime" type="CharacterBody2D" unique_id=1233878181 groups=["boss", "mobs"]]
+scale = Vector2(1.5, 1.5)
 collision_mask = 0
 script = ExtResource("1_7lci5")
 metadata/_edit_group_ = true
@@ -96,22 +97,21 @@ metadata/_edit_group_ = true
 [node name="Shadow" type="Sprite2D" parent="." unique_id=677045502]
 visible = false
 z_index = -1
-position = Vector2(0, 30)
-scale = Vector2(2, 2)
+position = Vector2(0, 7.5)
+scale = Vector2(1.75, 1.75)
 texture = ExtResource("2_vd2mp")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2099506625]
-scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_kyu3p")
 animation = &"slime4"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1466649267]
-position = Vector2(0, 28)
+position = Vector2(0, 20)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_lq8xf")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1224353451]
-rect = Rect2(-84, -43, 171, 139)
+rect = Rect2(-56, -29, 114, 94)
 
 [node name="LandSound" type="AudioStreamPlayer2D" parent="." unique_id=515198839]
 stream = ExtResource("4_vd2mp")

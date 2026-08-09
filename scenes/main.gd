@@ -19,6 +19,9 @@ var attack_timer: float = 0.0
 var slow_timer: float = 0.0
 var double_timer: float = 0.0
 var powerup_increased_rate_timer: float = 0.0
+var slippery_timer: float = 0.0
+var bouncy_timer: float = 0.0
+var confused_timer: float = 0.0
 
 var can_spawn_mobs: bool = true
 var can_spawn_bosses: bool = true
@@ -133,7 +136,57 @@ var party_modifiers: Array[Callable] = [
 		$HUD.display_modifier("Teleport")
 		$Player.invincibility_timer = $Player.invincibility_duration
 		$Player.invincible = true
-		$Player.position = Vector2(randf_range(0.0, $ViewportSize.size.x), randf_range(0.0, $ViewportSize.size.y))]
+		$Player.position = Vector2(randf_range(0.0, $ViewportSize.size.x), randf_range(0.0, $ViewportSize.size.y)),
+	func() -> void:
+		$HUD.display_modifier("Bouncy")
+		$Player.bouncy = true
+		bouncy_timer += 15.0,
+	func() -> void:
+		$HUD.display_modifier("Slippery")
+		$Player.slippery = true
+		slippery_timer += 7.5,
+	func() -> void:
+		$HUD.display_modifier("Big Enemies")
+		for enemy in get_tree().get_nodes_in_group("mobs"):
+			enemy.scale *= randf_range(1.2, 1.6),
+	func() -> void:
+		$HUD.display_modifier("Small Enemies")
+		for enemy in get_tree().get_nodes_in_group("mobs"):
+			enemy.scale *= randf_range(0.6, 0.8),
+	func() -> void:
+		$HUD.display_modifier("Slime Rain")
+		var boss = load("res://bosses/boss_slime.tscn").instantiate()
+		var boss_spawn = get_spawn_location()
+		boss.position = boss_spawn[0]
+		boss.scale *= randf_range(0.85, 1.15)
+		add_child(boss)
+		boss.init(boss_spawn[1] + randf_range(-PI / 4, PI / 4))
+
+		var slime_scene = load("res://enemies/mob_slime.tscn")
+		var slime_count = randi_range(5, 10)
+		for i in range(slime_count):
+			var mob = slime_scene.instantiate()
+			var spawn = get_spawn_location()
+			mob.position = spawn[0]
+			mob.scale *= randf_range(0.85, 1.15)
+			add_child(mob)
+			mob.init(spawn[1] + randf_range(-PI / 4, PI / 4)),
+	func() -> void:
+		$HUD.display_modifier("Confused")
+		$Player.confused = true
+		confused_timer += 0.2,
+	func() -> void:
+		$HUD.display_modifier("Slow-Motion")
+		time_scale(0.2, 5.0, true),
+	func() -> void:
+		$HUD.display_modifier("Enemy Shuffle")
+		var enemy_positions: Array[Vector2]
+		for enemy in get_tree().get_nodes_in_group("mobs"):
+			enemy_positions.push_back(enemy.position)
+		enemy_positions.shuffle()
+
+		for enemy in get_tree().get_nodes_in_group("mobs"):
+			enemy.position = enemy_positions.pop_back()]
 
 func quit_game():
 	$Player.invincible = false
@@ -158,6 +211,9 @@ func new_game(game_mode: GameMode.GameMode):
 	slow_timer = 0.0
 	double_timer = 0.0
 	powerup_increased_rate_timer = 0.0
+	slippery_timer = 0.0
+	bouncy_timer = 0.0
+	confused_timer = 0.0
 	score_timer = score_speed
 	powerup_timer = powerup_spawn_speed
 	mob_timer = mob_spawn_speed
@@ -208,7 +264,19 @@ func _process(delta: float) -> void:
 		powerup_increased_rate_timer = max(0.0, powerup_increased_rate_timer - delta)
 		if powerup_increased_rate_timer == 0.0:
 			is_powerup_rate_increased = false
-	$HUD.display_powerup_info(attack_timer, slow_timer, double_timer, powerup_increased_rate_timer)
+	if bouncy_timer > 0.0:
+		bouncy_timer = max(0.0, bouncy_timer - delta)
+		if bouncy_timer == 0.0:
+			$Player.bouncy = false
+	if slippery_timer > 0.0:
+		slippery_timer = max(0.0, slippery_timer - delta)
+		if slippery_timer == 0.0:
+			$Player.slippery = false
+	if confused_timer > 0.0:
+		confused_timer = max(0.0, confused_timer - delta)
+		if confused_timer == 0.0:
+			$Player.confused = false
+	$HUD.display_powerup_info(attack_timer, slow_timer, double_timer, powerup_increased_rate_timer, bouncy_timer, slippery_timer, confused_timer)
 
 	if not start_timers: return
 	var slowed = delta / 3.0 if is_slowed else delta
@@ -240,8 +308,8 @@ func add_score(score_to_add: int) -> void:
 	$HUD.update_score(score)
 
 var time_scale_tween
-func time_scale(strength: float, length: float):
-	if not $HUD.slow_down_enabled: return
+func time_scale(strength: float, length: float, force: bool = false):
+	if not $HUD.slow_down_enabled and not force: return
 	if time_scale_tween:
 		time_scale_tween.kill()
 
