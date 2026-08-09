@@ -67,6 +67,7 @@ func _ready() -> void:
 	%OptionsMenu/TextFX.button_pressed = text_fx_enabled
 	%OptionsMenu/UIDelay.button_pressed = ui_delay_enabled
 	%OptionsMenu/InitDelay.button_pressed = initial_delay_enabled
+	%OptionsMenu/FullScreen.button_pressed = fullscreen
 
 	%MainMenu/GameModeButton.texture_normal = GAME_MODE_ICONS[game_mode]
 	%MainMenu/GameModeButton.tooltip_text = GAME_MODE_TOOLTIPS[game_mode]
