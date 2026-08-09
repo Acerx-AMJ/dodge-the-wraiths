@@ -225,6 +225,9 @@ func new_game(game_mode: GameMode.GameMode):
 	can_spawn_bosses = true
 	can_spawn_powerups = (game_mode != GameMode.GameMode.NO_POWERUPS)
 
+	if game_mode == GameMode.GameMode.BOSS:
+		boss_timer = boss_game_mode_spawn_speed
+
 	for mob in get_tree().get_nodes_in_group("mobs"):
 		mob.remove_from_group("mobs")
 		mob.queue_free()
@@ -234,17 +237,15 @@ func new_game(game_mode: GameMode.GameMode):
 	$Player.start($ViewportSize.size / 2)
 	$HUD.update_score(score)
 
-	if game_mode == GameMode.GameMode.BOSS:
-		boss_timer = boss_game_mode_spawn_speed
-	elif game_mode == GameMode.GameMode.PARTY:
-		party_modifiers.pick_random().call()
-
 	if not $HUD.initial_delay_enabled:
 		$HUD/Message.hide()
 	else:
 		$HUD.show_message("Get Ready...")
 		await get_tree().create_timer(2.0).timeout
+
 	start_timers = true
+	if game_mode == GameMode.GameMode.PARTY:
+		party_modifiers.pick_random().call()
 
 func _process(delta: float) -> void:
 	if not is_playing: return

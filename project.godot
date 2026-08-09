@@ -13,6 +13,8 @@ config_version=5
 config/name="dodge-the-creeps"
 run/main_scene="uid://oyc4tpt6una1"
 config/features=PackedStringArray("4.7", "Forward Plus")
+config/icon="uid://dkj3ra31n3xu6"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
