@@ -59,6 +59,7 @@ var powerup_types = [
 		add_score(get_tree().get_node_count_in_group("boss") * 10 + get_tree().get_node_count_in_group("non_boss") * 3)
 		$Camera2D.shake(15.0, 5.0)
 		$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
+		time_scale(0.2, 0.3)
 
 		for enemy in get_tree().get_nodes_in_group("mobs"):
 			var sprite = enemy.get_node("AnimatedSprite2D")
@@ -157,6 +158,16 @@ func add_score(score_to_add: int) -> void:
 	score += score_to_add * 2 if is_score_doubled else score_to_add
 	$HUD.update_score(score)
 
+var time_scale_tween
+func time_scale(strength: float, length: float):
+	if not $HUD.slow_down_enabled: return
+	if time_scale_tween:
+		time_scale_tween.kill()
+
+	Engine.time_scale = strength
+	time_scale_tween = get_tree().create_tween()
+	time_scale_tween.tween_property(Engine, "time_scale", 1.0, length)
+
 func spawn_text_fx(position: Vector2, color: Color, amount: int) -> void:
 	if not $HUD.text_fx_enabled: return
 	var text_fx = load("res://scenes/text_fx.tscn").instantiate()
@@ -228,6 +239,7 @@ func _on_player_enemy_killed(enemy: Node2D, is_boss: bool) -> void:
 	var color = Color.YELLOW if is_boss else Color.WHITE
 	add_score(score_to_add)
 	spawn_text_fx(enemy.position, color, score_to_add)
+	time_scale(0.2, 0.3 if is_boss else 0.2)
 
 func _on_player_hit() -> void:
 	$Camera2D.shake(15.0, 5.0)
