@@ -87,7 +87,7 @@ func _process(delta: float) -> void:
 			toggle_visibility(true)
 
 func _on_body_entered(body: Node2D) -> void:
-	if invincible: return # Avoid using shield when invincible
+	if invincible and not attack_mode: return # Avoid using shield when invincible
 
 	if attack_mode or shielded:
 		enemy_killed.emit(body, body.is_in_group("boss"))

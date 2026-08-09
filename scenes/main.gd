@@ -66,22 +66,12 @@ var powerup_types = [
 		add_score(20)
 		spawn_text_fx(powerup.position, Color.YELLOW, 20)],
 	["powerup_clear", func(_powerup: Area2D) -> void:
-		add_score(get_tree().get_node_count_in_group("boss") * 10 + get_tree().get_node_count_in_group("non_boss") * 3)
 		$Camera2D.shake(15.0, 5.0)
 		$Vignette.apply(Color.DARK_RED, 1.0, 1.5)
 		time_scale(0.2, 0.3)
 
 		for enemy in get_tree().get_nodes_in_group("mobs"):
-			var sprite = enemy.get_node("AnimatedSprite2D")
-			var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
-			spawn_death_particles(texture, enemy.position)
-
-			var is_boss = enemy.is_in_group("boss")
-			var color = Color.YELLOW if is_boss else Color.WHITE
-			var display_score = 10 if is_boss else 3
-			spawn_text_fx(enemy.position, color, display_score)
-
-			enemy.queue_free()],
+			kill_enemy(enemy)],
 	["powerup_attack", func(_powerup: Area2D) -> void:
 		$Player.powerup_attack()
 		attack_timer += 5.0],
@@ -121,17 +111,29 @@ var party_modifiers: Array[Callable] = [
 		var enemy_count = randi_range(2, 5)
 		while get_tree().get_node_count_in_group("mobs") > 0 and enemy_count > 0:
 			var enemy = get_tree().get_nodes_in_group("mobs").pick_random()
-			var sprite = enemy.get_node("AnimatedSprite2D")
-			var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
-			spawn_death_particles(texture, enemy.position)
+			enemy.remove_from_group("mobs")
+			kill_enemy(enemy)
+			enemy_count -= 1,
+	func() -> void:
+		$HUD.display_modifier("+Boss")
+		spawn_boss(),
+	func() -> void:
+		$HUD.display_modifier("+Enemy Type")
+		var mob_scene = mob_scenes.pick_random()
+		var mob_count = randi_range(3, 7)
 
-			var is_boss = enemy.is_in_group("boss")
-			var color = Color.YELLOW if is_boss else Color.WHITE
-			var display_score = 10 if is_boss else 3
-			spawn_text_fx(enemy.position, color, display_score)
-			add_score(display_score)
-			enemy.queue_free()
-			enemy_count -= 1]
+		for i in range(mob_count):
+			var mob = mob_scene.instantiate()
+			var spawn = get_spawn_location()
+			mob.position = spawn[0]
+			mob.scale *= randf_range(0.85, 1.15)
+			add_child(mob)
+			mob.init(spawn[1] + randf_range(-PI / 4, PI / 4)),
+	func() -> void:
+		$HUD.display_modifier("Teleport")
+		$Player.invincibility_timer = $Player.invincibility_duration
+		$Player.invincible = true
+		$Player.position = Vector2(randf_range(0.0, $ViewportSize.size.x), randf_range(0.0, $ViewportSize.size.y))]
 
 func quit_game():
 	$Player.invincible = false
@@ -167,16 +169,19 @@ func new_game(game_mode: GameMode.GameMode):
 	can_spawn_bosses = true
 	can_spawn_powerups = (game_mode != GameMode.GameMode.NO_POWERUPS)
 
-	get_tree().call_group("mobs", "queue_free")
-	get_tree().call_group("powerups", "queue_free")
+	for mob in get_tree().get_nodes_in_group("mobs"):
+		mob.remove_from_group("mobs")
+		mob.queue_free()
+	for pup in get_tree().get_nodes_in_group("powerups"):
+		pup.remove_from_group("powerups")
+		pup.queue_free()
+	$Player.start($ViewportSize.size / 2)
+	$HUD.update_score(score)
 
 	if game_mode == GameMode.GameMode.BOSS:
 		boss_timer = boss_game_mode_spawn_speed
 	elif game_mode == GameMode.GameMode.PARTY:
 		party_modifiers.pick_random().call()
-
-	$Player.start($ViewportSize.size / 2)
-	$HUD.update_score(score)
 
 	if not $HUD.initial_delay_enabled:
 		$HUD/Message.hide()
@@ -301,20 +306,24 @@ func spawn_powerup() -> void:
 	add_child(powerup)
 	$PowerupSpawnSound.play()
 
+func kill_enemy(enemy: Node2D) -> void:
+	var sprite = enemy.get_node("AnimatedSprite2D")
+	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
+	spawn_death_particles(texture, enemy.position)
+
+	var is_boss = enemy.is_in_group("boss")
+	var color = Color.YELLOW if is_boss else Color.WHITE
+	var display_score = 10 if is_boss else 3
+	spawn_text_fx(enemy.position, color, display_score)
+	add_score(display_score)
+	enemy.queue_free()
+
 func _on_player_enemy_killed(enemy: Node2D, is_boss: bool) -> void:
 	var sounds = $KillSounds.get_children()
 	sounds[randi() % sounds.size()].play()
 	$Camera2D.shake(10.0, 7.5)
 	$Vignette.apply(Color.DARK_RED, 0.5, 1.0)
-
-	var sprite = enemy.get_node("AnimatedSprite2D")
-	var texture = sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.get_frame())
-	spawn_death_particles(texture, enemy.position)
-
-	var score_to_add = 10 if is_boss else 3
-	var color = Color.YELLOW if is_boss else Color.WHITE
-	add_score(score_to_add)
-	spawn_text_fx(enemy.position, color, score_to_add)
+	kill_enemy(enemy)
 	time_scale(0.2, 0.3 if is_boss else 0.2)
 
 func _on_player_hit() -> void:
